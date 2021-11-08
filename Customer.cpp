@@ -62,6 +62,3 @@ std::vector<int> FullBodyCustomer::order(const std::vector <Workout> &workout_op
 std::string FullBodyCustomer::toString() const {
     return "fbd";
 }
-
-
-
