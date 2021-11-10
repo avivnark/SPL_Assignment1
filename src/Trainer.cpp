@@ -1,5 +1,5 @@
 
-#include "Trainer.h"
+#include "../include/Trainer.h"
 
 Trainer::Trainer(int t_capacity) {
 
@@ -35,11 +35,11 @@ Trainer::order(const int customer_id, const std::vector<int> workout_ids, const 
 }
 
 void Trainer::openTrainer() {
-
+    open = true;
 }
 
 void Trainer::closeTrainer() {
-
+    open = false;
 }
 
 int Trainer::getSalary() {

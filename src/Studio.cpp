@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ifstream>
-#include "Studio.h"
+#include "../include/Studio.h"
 #include "string"
 
 using namespace std;
@@ -10,10 +10,11 @@ void Studio::start() {
 }
 
 Studio::Studio() {
-
+    open = true;
 }
 
 Studio::Studio(const string &configFilePath) {
+    open = true;
     string line;
     int numOfTrainers;
     ifstream MyReadFile(configFilePath);
@@ -23,7 +24,7 @@ Studio::Studio(const string &configFilePath) {
     trainers.reserve(numOfTrainers)
     getline (MyReadFile, line);
     for(i=0;i<numOfTrainers;i++){
-        trainers[i](int(line.substr(i, i + 1)));
+        trainers[i] = new *Trainer(int(line.substr(i, i + 1)));
         line=line.substr(i+2,line.length());
     }
     index=0;
@@ -34,7 +35,7 @@ Studio::Studio(const string &configFilePath) {
         string type=line.substr(0,comma+1);
         line=line.substr(comma+1,line.length());
         int price=(int)line;
-        workout_options[index](index,name,type,price);
+        workout_options=new Workout([index](index,name,type,price));
         index++;
     }
     MyReadFile.close();
@@ -43,10 +44,14 @@ Studio::Studio(const string &configFilePath) {
 }
 
 int Studio::getNumOfTrainers() const {
-    return trainers.size();
+    return int(trainers.size())
 }
 
 Trainer *Studio::getTrainer(int tid) {
+    if (trainers.size()<tid){
+        return nullptr;
+
+    }
     return &trainers[tid];
 }
 

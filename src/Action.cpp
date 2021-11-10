@@ -1,4 +1,7 @@
-#include "Action.h"
+#include "../include/Action.h"
+#include "../include/Studio.h"
+
+using namespace std;
 
 BaseAction::BaseAction() {
 
@@ -32,7 +35,13 @@ std::string OpenTrainer::toString() const {
 }
 
 void OpenTrainer::act(Studio &studio) {
-
+    Trainer* t=studio.getTrainer(trainerId);
+    if(t != nullptr && t->isOpen()){
+        this->error("Trainer is already opened");
+    }
+    if(!t->isOpen()) {
+        t->openTrainer();
+    }
 }
 
 void Order::act(Studio &studio) {
@@ -52,10 +61,17 @@ std::string MoveCustomer::toString() const {
 }
 
 Close::Close(int id) {
-
+    this->act()
 }
 
 void Close::act(Studio &studio) {
+    Trainer* t=studio.getTrainer(trainerId);
+    if(t == nullptr || t->isOpen()){
+        this->error("Trainer doesn't exist or is not open");
+    }
+    int salary = t->getSalary();
+    t->closeTrainer();
+    std::cout << "Trainer " << id << " closed. Salary " << salary << "NIS" << std::endl;
 
 }
 
