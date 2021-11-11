@@ -21,7 +21,7 @@ SweatyCustomer::SweatyCustomer(string name, int id) : Customer(name, id) {
 }
 
 vector<int> SweatyCustomer::order(const ::vector <Workout> &workout_options) {
-    return nullptr;
+    return {1,2,3};
 }
 
 string SweatyCustomer::toString() const {
@@ -34,7 +34,7 @@ CheapCustomer::CheapCustomer(string name, int id) : Customer(name, id) {
 }
 
 vector<int> CheapCustomer::order(const vector <Workout> &workout_options) {
-    return nullptr;
+    return {1,2,3};
 }
 
 string CheapCustomer::toString() const {
@@ -46,7 +46,7 @@ HeavyMuscleCustomer::HeavyMuscleCustomer(string name, int id) : Customer(name, i
 }
 
 vector<int> HeavyMuscleCustomer::order(const vector <Workout> &workout_options) {
-    return nullptr;
+    return {1,2,3};
 }
 
 string HeavyMuscleCustomer::toString() const {
@@ -58,7 +58,7 @@ FullBodyCustomer::FullBodyCustomer(string name, int id) : Customer(name, id) {
 }
 
 vector<int> FullBodyCustomer::order(const vector <Workout> &workout_options) {
-    return nullptr;
+    return {1,2,3};
 }
 
 string FullBodyCustomer::toString() const {

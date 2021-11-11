@@ -1,4 +1,5 @@
 #include "../include/Workout.h"
+#include "../include/Studio.h"
 
 using namespace std;
 
@@ -23,6 +24,6 @@ WorkoutType Workout::getType() const {
 }
 
 string Workout::toString() const {
-    return getName() + ", " + getType() + ", " + string(getPrice());
+    return "Workout";
 }
 

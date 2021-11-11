@@ -22,11 +22,11 @@ Customer *Trainer::getCustomer(int id) {
 }
 
 std::vector<Customer *> &Trainer::getCustomers() {
-    return <#initializer#>;
+    return customersList;
 }
 
 std::vector<OrderPair> &Trainer::getOrders() {
-    return <#initializer#>;
+    return orderList;
 }
 
 void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout> &workout_options) {
