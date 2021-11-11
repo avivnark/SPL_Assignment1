@@ -1,12 +1,13 @@
+#include "../include/Studio.h"
 #include <iostream>
 #include <ifstream>
-#include "../include/Studio.h"
+#include "algorithm"
 #include "string"
 
 using namespace std;
 
 void Studio::start() {
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "Studio is now Open!" << std::endl;
 }
 
 Studio::Studio() {
@@ -18,7 +19,6 @@ Studio::Studio(const string &configFilePath) {
     string line;
     int numOfTrainers;
     ifstream MyReadFile(configFilePath);
-    int index = 0;
     getline (MyReadFile, line);
     numOfTrainers = int(line);
     trainers.reserve(numOfTrainers)
@@ -27,20 +27,26 @@ Studio::Studio(const string &configFilePath) {
         trainers[i] = new *Trainer(int(line.substr(i, i + 1)));
         line=line.substr(i+2,line.length());
     }
-    index=0;
+    int index=0;
     while (getline (MyReadFile, line)) {
         int comma = line.find(",");
         string name=line.substr(0,comma+1);
         line=line.substr(comma+1,line.length());
-        string type=line.substr(0,comma+1);
+        string w_type=line.substr(0,comma+1);
+        toUpperCase(&w_type);
         line=line.substr(comma+1,line.length());
         int price=(int)line;
-        workout_options=new Workout([index](index,name,type,price));
+        map<string, WorkoutType> type_map = boost::map_list_of("MIXED", MIXED)("ANAEROBIC", ANAEROBIC)("CARDIO",CARDIO);
+        workout_options[index]=new Workout(index,name,price,type_map[w_type]);
         index++;
     }
     MyReadFile.close();
 
 
+}
+
+Studio:: void toUpperCase(string & w_type){
+    transform(str.begin(), str.end(), str.begin(), ::toupper);
 }
 
 int Studio::getNumOfTrainers() const {

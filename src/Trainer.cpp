@@ -29,8 +29,7 @@ std::vector<OrderPair> &Trainer::getOrders() {
     return <#initializer#>;
 }
 
-void
-Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout> &workout_options) {
+void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout> &workout_options) {
 
 }
 

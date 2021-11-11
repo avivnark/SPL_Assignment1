@@ -21,6 +21,13 @@ void BaseAction::error(std::string errorMsg) {
     std::cout << "Error: " << errorMsg << std::endl;
 }
 
+//void BaseAction::logger(string & command, vector<string>& *arguments){
+//    string log = command;
+//    for (int i = 0; i < (*arguments).size();i++) {
+//        log += " " + (*arguments)[i];
+//    }
+//}
+
 std::string BaseAction::getErrorMsg() const {
     return errorMsg;
 }
@@ -30,22 +37,36 @@ OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList):trainer
 
 }
 
-std::string OpenTrainer::toString() const {
-    return std::string();
+string OpenTrainer::toString() const {
+    string log = "Open" << trainerId <<
+    return
 }
 
 void OpenTrainer::act(Studio &studio) {
     Trainer* t=studio.getTrainer(trainerId);
-    if(t != nullptr && t->isOpen()){
-        this->error("Trainer is already opened");
+    if (t == nullptr){
+        error("Trainer does not exist");
+        return;
     }
-    if(!t->isOpen()) {
-        t->openTrainer();
+    if(t->isOpen()){
+        this->error("Trainer is already opened");
+        return;
+    }
+    if (customers.size() > t->getCapacity()){
+        error("Not enough spots open for this trainer");
+        return;
+    }
+    t->openTrainer();
+    for (auto & customer : customers) {
+        t->addCustomer(customer);
     }
 }
 
 void Order::act(Studio &studio) {
-
+    Trainer* t=studio.getTrainer(trainerId);
+    if(t == nullptr || t->isOpen()){
+        this->error("Trainer doesn't exist or is not open");
+    }
 }
 
 MoveCustomer::MoveCustomer(int src, int dst, int customerId) {
@@ -80,7 +101,13 @@ CloseAll::CloseAll() {
 }
 
 void CloseAll::act(Studio &studio) {
-
+    for (int i = 0; i < studio.getNumOfTrainers(); ++i) {
+        Trainer * trainer = studio.getTrainer(i);
+        if (trainer->isOpen()){
+            // should close the trainer here using the Close act
+        }
+        // should close studio here
+    }
 }
 
 std::string CloseAll::toString() const {
@@ -92,6 +119,9 @@ PrintWorkoutOptions::PrintWorkoutOptions() {
 }
 
 void PrintWorkoutOptions::act(Studio &studio) {
+    for (Workout * workout: studio.getWorkoutOptions()) {
+        cout << workout->toString() << endl;
+    }
 
 }
 
@@ -100,6 +130,7 @@ void PrintTrainerStatus::act(Studio &studio) {
 }
 
 std::string PrintTrainerStatus::toString() const {
+
     return std::string();
 }
 

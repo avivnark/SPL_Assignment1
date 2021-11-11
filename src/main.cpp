@@ -10,6 +10,7 @@ int main(int argc, char** argv){
         std::cout << "usage: studio <config_path>" << std::endl;
         return 0;
     }
+    cout << "Hi" << endl;
     string configurationFile = argv[1];
     Studio studio(configurationFile);
     studio.start();
