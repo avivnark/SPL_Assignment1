@@ -1,7 +1,9 @@
 //#include "../include/Action.h"
-//#include "../include/Studio.h"
+//#include "../include/Trainer.h"
+////#include "../include/Studio.h"
 //
 //using namespace std;
+//
 //
 //BaseAction::BaseAction() {
 //
