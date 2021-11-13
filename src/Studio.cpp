@@ -10,11 +10,17 @@ void Studio::start() {
     std::cout << "Studio is now Open!" << std::endl;
     string user_input;
     getline(cin, user_input);
-    while (user_input != "closeall") {
+    while (true) {
         string command;
         std::vector<string> args;
         bool valid = extractCommand(user_input, command, args);
-        if (command == "open"){
+        if (command == "closeall"){
+            auto * closeAll = new CloseAll();
+            closeAll->act(*this);
+            open = false;
+            break;
+        }
+        else if (command == "open"){
             int trainerId = stoi(args[0]);
             std::vector<Customer*> * customerList;
             vector<string> customersRawInput = {args.begin() + 1, args.end()};
@@ -207,4 +213,11 @@ void Studio::createCustomers(vector<string> &args, vector<Customer *> &customerL
     }
 
 
+}
+
+void Studio::splitNameStrategy(string &customerString, string &name, string &strategy) {
+    //example input for customerString: "Shalom,swt"
+    int comma = customerString.find(',');
+    name = customerString.substr(0, comma);
+    strategy = customerString.substr(comma + 1);
 }

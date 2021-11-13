@@ -33,6 +33,7 @@ private:
     bool extractCommand(const string& user_input, string & command, std::vector<string> & args);
     bool raiseOnInvalidArgument(string & arg);
     bool printInvalidArgumentError();
+    void splitNameStrategy(string & customerString, string & name, string & strategy);
 };
 
 #endif
