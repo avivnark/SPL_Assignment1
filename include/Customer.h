@@ -5,6 +5,8 @@
 #include <string>
 #include "Workout.h"
 
+using namespace std;
+
 class Customer{
 public:
     Customer(std::string c_name, int c_id);

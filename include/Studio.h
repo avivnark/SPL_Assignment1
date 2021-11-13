@@ -23,6 +23,13 @@ private:
     std::vector<Trainer*> trainers;
     std::vector<Workout> workout_options;
     std::vector<BaseAction*> actionsLog;
+
+    int readNumOfTrainers(std::string line);
+    void createNewTrainers(std::string line);
+    void getWorkoutData(std::string line,string* w_name,WorkoutType* w_type,int* w_price);
+    WorkoutType convertStringToEnum(std::string string_workout);
+    std::string convertEnumToString(WorkoutType enum_workout);
+
 };
 
 #endif

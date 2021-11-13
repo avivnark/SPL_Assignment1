@@ -1,11 +1,13 @@
 #include "../include/Customer.h"
 
+using namespace std;
 
-Customer::Customer(std::string c_name, int c_id):name(c_name),id(c_id) {
+
+Customer::Customer(string c_name, int c_id):name(c_name),id(c_id) {
 
 }
 
-std::string Customer::getName() const {
+string Customer::getName() const {
     return name;
 }
 
@@ -14,9 +16,10 @@ int Customer::getId() const {
 }
 
 
-SweatyCustomer::SweatyCustomer(std::string name, int id) : Customer(name, id) {
+SweatyCustomer::SweatyCustomer(string name, int id) : Customer(name, id) {
 
 }
+
 
 std::vector<int> SweatyCustomer::order(const std::vector <Workout> &workout_options) {
     int numOfWorkouts = &workout_options.size();
@@ -27,11 +30,12 @@ std::vector<int> SweatyCustomer::order(const std::vector <Workout> &workout_opti
     return workoutsOrdered;
 }
 
-std::string SweatyCustomer::toString() const {
+string SweatyCustomer::toString() const {
     return "swt";
 }
 
-CheapCustomer::CheapCustomer(std::string name, int id) : Customer(name, id) {
+CheapCustomer::CheapCustomer(string name, int id) : Customer(name, id) {
+
 
 }
 
@@ -48,13 +52,14 @@ std::vector<int> CheapCustomer::order(const std::vector <Workout> &workout_optio
     return workoutsOrdered;
 }
 
-std::string CheapCustomer::toString() const {
+string CheapCustomer::toString() const {
     return "chp";
 }
 
-HeavyMuscleCustomer::HeavyMuscleCustomer(std::string name, int id) : Customer(name, id) {
+HeavyMuscleCustomer::HeavyMuscleCustomer(string name, int id) : Customer(name, id) {
 
 }
+
 
 std::vector<int> HeavyMuscleCustomer::order(const std::vector <Workout> &workout_options) {
     vector<int> workoutsOrdered;
@@ -66,11 +71,11 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector <Workout> &workout
     return workoutsOrdered;
 }
 
-std::string HeavyMuscleCustomer::toString() const {
+string HeavyMuscleCustomer::toString() const {
     return "mcl";
 }
 
-FullBodyCustomer::FullBodyCustomer(std::string name, int id) : Customer(name, id) {
+FullBodyCustomer::FullBodyCustomer(string name, int id) : Customer(name, id) {
 
 }
 
@@ -128,6 +133,6 @@ std::vector<int> FullBodyCustomer::order(const std::vector <Workout> &workout_op
     return workoutsOrdered;
 }
 
-std::string FullBodyCustomer::toString() const {
+string FullBodyCustomer::toString() const {
     return "fbd";
 }
