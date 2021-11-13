@@ -1,4 +1,3 @@
-#include "../include/Workout.h"
 #include "../include/Studio.h"
 
 using namespace std;

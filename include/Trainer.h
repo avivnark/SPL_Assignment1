@@ -2,8 +2,9 @@
 #define TRAINER_H_
 
 #include <vector>
-#include "Customer.h"
+#include "Studio.h"
 #include "Workout.h"
+#include "Customer.h"
 
 typedef std::pair<int, Workout> OrderPair;
 
