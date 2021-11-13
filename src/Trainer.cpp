@@ -6,7 +6,7 @@ Trainer::Trainer(int t_capacity) {
 }
 
 int Trainer::getCapacity() const {
-    return 0;
+    return 0git;
 }
 
 void Trainer::addCustomer(Customer *customer) {
