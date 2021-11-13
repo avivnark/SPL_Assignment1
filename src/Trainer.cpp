@@ -6,6 +6,7 @@ Trainer::Trainer(int t_capacity): capacity(t_capacity){
 
 int Trainer::getCapacity() const {
     return capacity;
+
 }
 
 void Trainer::addCustomer(Customer *customer) {
@@ -52,5 +53,3 @@ bool Trainer::isOpen() {
 void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const vector<Workout> &workout_options) {
 
 }
-
-
