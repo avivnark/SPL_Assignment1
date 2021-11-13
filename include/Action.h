@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include "Studio.h"
+#include "Customer.h"
 
 enum ActionStatus{
     COMPLETED, ERROR

@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include "Trainer.h"
-#include "Customer.h"
 #include "Workout.h"
 #include "Action.h"
 

@@ -2,7 +2,6 @@
 #define TRAINER_H_
 
 #include <vector>
-#include "Studio.h"
 #include "Workout.h"
 #include "Customer.h"
 
