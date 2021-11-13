@@ -121,6 +121,10 @@ void Close::act(Studio &studio) {
 
 }
 
+std::string Close::toString() const {
+    return "close " + to_string(trainerId);
+}
+
 CloseAll::CloseAll() {
 
 }
@@ -214,6 +218,10 @@ BackupStudio::BackupStudio():BaseAction(){
 
 void BackupStudio::act(Studio &studio) {
     backup = new Studio(studio);
+}
+
+std::string BackupStudio::toString() const {
+    return "backup";
 }
 
 RestoreStudio::RestoreStudio():BaseAction() {
