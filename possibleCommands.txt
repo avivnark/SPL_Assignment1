@@ -1,0 +1,26 @@
+command: open <trainer_id> <customer1>,< customer1_strategy> <customer2>,<customer2_ strategy>
+Example: "open 2 Shalom,swt Dan,chp Alice,mcl Bob,fbd"
+
+Command: order <trainer_id>
+Example: "order 2"
+
+Command: move <origin_trainer_id> <dest_trainer_id> <customer_id>
+Example: "move 2 3 5"
+
+Command: close <trainer_id>
+Example: "close 2"
+
+Command: closeall
+Example: "closeall"
+
+Command: workout_options
+Example: "workout_options"
+
+Command: status <trainer_id>
+Example: "status 2"
+
+Command: log
+
+Command: backup
+
+Command:

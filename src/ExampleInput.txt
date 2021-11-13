@@ -1,5 +1,7 @@
 4
+
 6,6,8,4
+
 Yoga, Anaerobic, 90
 Pilates, Anaerobic, 110
 Spinning, Mixed, 120

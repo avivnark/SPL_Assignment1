@@ -1,12 +1,12 @@
+#include "../include/Studio.h"
 
-#include "../include/Trainer.h"
-
-Trainer::Trainer(int t_capacity) {
+Trainer::Trainer(int t_capacity): capacity(t_capacity){
 
 }
 
 int Trainer::getCapacity() const {
-    return 0git;
+    return capacity;
+
 }
 
 void Trainer::addCustomer(Customer *customer) {
@@ -18,6 +18,11 @@ void Trainer::removeCustomer(int id) {
 }
 
 Customer *Trainer::getCustomer(int id) {
+    for (auto & customer: customersList) {
+        if (customer->getId() == id){
+            return customer;
+        }
+    }
     return nullptr;
 }
 
@@ -27,10 +32,6 @@ std::vector<Customer *> &Trainer::getCustomers() {
 
 std::vector<OrderPair> &Trainer::getOrders() {
     return orderList;
-}
-
-void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout> &workout_options) {
-
 }
 
 void Trainer::openTrainer() {
@@ -46,7 +47,9 @@ int Trainer::getSalary() {
 }
 
 bool Trainer::isOpen() {
-    return false;
+    return open;
 }
 
+void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const vector<Workout> &workout_options) {
 
+}

@@ -2,6 +2,7 @@
 #define WORKOUT_H_
 
 #include <string>
+#include "Studio.h"
 
 using namespace std;
 
