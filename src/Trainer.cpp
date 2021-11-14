@@ -1,6 +1,6 @@
 #include "../include/Studio.h"
 
-Trainer::Trainer(int t_capacity): capacity(t_capacity){
+Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
 
 }
 
@@ -28,8 +28,8 @@ void Trainer::removeCustomer(int id) {
 }
 
 Customer *Trainer::getCustomer(int id) {
-    for (auto & customer: customersList) {
-        if (customer->getId() == id){
+    for (auto &customer: customersList) {
+        if (customer->getId() == id) {
             return customer;
         }
     }
@@ -50,10 +50,18 @@ void Trainer::openTrainer() {
 
 void Trainer::closeTrainer() {//lo laasot
     open = false;
+    for (auto *customer: customersList) { // could possibly cause concurrent issues, should think about it
+        removeCustomer(customer->getId());
+    }
+    customersList.clear();
 }
 
 int Trainer::getSalary() {
-    return 0;
+    int totalSalary = 0;
+    for(OrderPair orderPair: orderList){
+        totalSalary += orderPair.second.getPrice();
+    }
+    return totalSalary;
 }
 
 bool Trainer::isOpen() {
@@ -61,5 +69,10 @@ bool Trainer::isOpen() {
 }
 
 void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const vector<Workout> &workout_options) {
-
+//    typedef std::pair<int, Workout> OrderPair;
+//    std::vector<OrderPair> orderList; //A list of pairs for each order for the trainer - (customer_id, Workout)
+    for (int w_id: workout_ids) {
+        OrderPair orderPair(customer_id, workout_options[w_id]);
+        orderList.push_back(orderPair);
+    }
 }

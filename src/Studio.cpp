@@ -24,7 +24,7 @@ Studio::Studio(const string &configFilePath) {
     int w_id= 0;
     while (getline(MyReadFile, line)) {
         // line example: Yoga, Anaerobic, 90
-        if (line.empty()){
+        if (line[0] == '\0' || line[0] == '#'){
             continue;
         }
         string w_name;
@@ -63,11 +63,13 @@ void Studio::start() {
             int trainerId = stoi(args[0]);
             auto * closeAction = new Close(trainerId);
             closeAction->act(*this);
+            actionsLog.push_back(closeAction);
         }
         else if (command == "order"){
             int trainerId = stoi(args[0]);
             auto * orderAction = new Order(trainerId);
             orderAction->act(*this);
+            actionsLog.push_back(orderAction);
         }
         else if (command == "move"){
             int origin_trainer_id = stoi(args[0]);
@@ -75,15 +77,18 @@ void Studio::start() {
             int customer_id = stoi(args[2]);
             auto * moveCustomer = new MoveCustomer(origin_trainer_id, dest_trainer_id, customer_id);
             moveCustomer->act(*this);
+            actionsLog.push_back(moveCustomer);
         }
         else if (command == "workout_options"){
             auto * workoutOptions = new PrintWorkoutOptions();
             workoutOptions->act(*this);
+            actionsLog.push_back(workoutOptions);
         }
         else if (command == "status"){
             int trainerId = stoi(args[0]);
             auto * printTrainerStatus = new PrintTrainerStatus(trainerId);
             printTrainerStatus->act(*this);
+            actionsLog.push_back(printTrainerStatus);
         }
         else if (command == "log") {
             auto * printActionsLog = new PrintActionsLog();
@@ -92,6 +97,7 @@ void Studio::start() {
         else if (command == "backup"){
             BackupStudio * backupStudio = new BackupStudio();
             backupStudio->act(*this);
+            actionsLog.push_back(backupStudio);
         } else{
             cout << "Unidentified command, please try again:" << endl;
         }

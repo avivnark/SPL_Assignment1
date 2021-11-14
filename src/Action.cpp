@@ -75,10 +75,15 @@ Order::Order(int id) : BaseAction(), trainerId(id) {
 }
 
 void Order::act(Studio &studio) {
-    Trainer *t = studio.getTrainer(trainerId);
-    if (t == nullptr || t->isOpen()) {
+    Trainer *trainer = studio.getTrainer(trainerId);
+    if (trainer == nullptr || !trainer->isOpen()) {
         this->error("Trainer doesn't exist or is not open");
     }
+    for (auto * customer: trainer->getCustomers()) {
+        std::vector<int> customerWorkoutOrders = customer->order(studio.getWorkoutOptions());
+        trainer->order(customer->getId(), customerWorkoutOrders, studio.getWorkoutOptions());
+    }
+    complete();
 }
 
 std::string Order::toString() const {
