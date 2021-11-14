@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include "Trainer.h"
-#include "Customer.h"
 #include "Workout.h"
 #include "Action.h"
 
@@ -24,6 +23,7 @@ private:
     std::vector<Trainer*> trainers;
     std::vector<Workout> workout_options;
     std::vector<BaseAction*> actionsLog;
+    int sequentialCustomerId;
 
     int readNumOfTrainers(const std::string& line);
     void createCustomers(std::vector<string> & args, std::vector<Customer*> & customerList);
@@ -34,6 +34,7 @@ private:
     bool extractCommand(const string& user_input, string & command, std::vector<string> & args);
     bool raiseOnInvalidArgument(string & arg);
     bool printInvalidArgumentError();
+    void splitNameStrategy(string & customerString, string & name, string & strategy);
 };
 
 #endif

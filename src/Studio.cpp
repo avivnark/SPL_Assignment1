@@ -6,20 +6,57 @@
 
 using namespace std;
 
+Studio::Studio() {
+    open = true;
+    sequentialCustomerId = 0;
+}
+
+Studio::Studio(const string &configFilePath) {
+    open = true;
+    sequentialCustomerId = 0;
+    string line;
+    ifstream MyReadFile(configFilePath);
+    getline(MyReadFile, line);
+    int numOfTrainers = readNumOfTrainers(line);
+    trainers.reserve(numOfTrainers);
+    getline(MyReadFile, line);
+    createNewTrainers(line);
+    int w_id= 0;
+    while (getline(MyReadFile, line)) {
+        // line example: Yoga, Anaerobic, 90
+        if (line.empty()){
+            continue;
+        }
+        string w_name;
+        WorkoutType w_type;
+        int w_price;
+        getWorkoutData(line, &w_name, &w_type, &w_price);
+        workout_options.emplace_back(w_id, w_name, w_price, w_type);
+        w_id++;
+    }
+    MyReadFile.close();
+}
+
 void Studio::start() {
     std::cout << "Studio is now Open!" << std::endl;
     string user_input;
     getline(cin, user_input);
-    while (user_input != "closeall") {
+    while (true) {
         string command;
         std::vector<string> args;
-        bool valid = extractCommand(user_input, command, args);
-        if (command == "open"){
+        extractCommand(user_input, command, args);
+        if (command == "closeall"){
+            auto * closeAll = new CloseAll();
+            closeAll->act(*this);
+            open = false;
+            break;
+        }
+        else if (command == "open"){
             int trainerId = stoi(args[0]);
-            std::vector<Customer*> * customerList;
+            std::vector<Customer*> customerList;
             vector<string> customersRawInput = {args.begin() + 1, args.end()};
-            createCustomers(customersRawInput,*customerList);
-            auto * openTrainer = new OpenTrainer(trainerId, *customerList);
+            createCustomers(customersRawInput,customerList);
+            auto * openTrainer = new OpenTrainer(trainerId, customerList);
             openTrainer->act(*this);
         } else if (command == "close"){
             int trainerId = stoi(args[0]);
@@ -61,37 +98,6 @@ void Studio::start() {
     }
 }
 
-Studio::Studio() {
-    open = true;
-}
-
-Studio::Studio(const string &configFilePath) {
-    open = true;
-    string line;
-    ifstream MyReadFile(configFilePath);
-    getline(MyReadFile, line);
-    int numOfTrainers = readNumOfTrainers(line);
-    trainers.reserve(numOfTrainers);
-    getline(MyReadFile, line);
-    createNewTrainers(line);
-    int w_id= 0;
-    while (getline(MyReadFile, line)) {
-        // line example: Yoga, Anaerobic, 90
-        if (line.empty()){
-            continue;
-        }
-        string w_name;
-        WorkoutType w_type;
-        int w_price;
-        getWorkoutData(line, &w_name, &w_type, &w_price);
-//        workout_options[w_id](w_id, w_name, w_price, w_type);
-        w_id++;
-    }
-    MyReadFile.close();
-
-
-}
-
 int Studio::getNumOfTrainers() const {
     return (int)trainers.size();
 }
@@ -118,7 +124,8 @@ int Studio::readNumOfTrainers(const string& line) {
 void Studio::createNewTrainers(string line) {
     //example input: "6,6,8,4"
     for (int i = 0; i < line.length(); i += 2) {
-        trainers[i] = new Trainer((int) (line[i]));
+        int capacity = line[i] - '0';
+        trainers.push_back(new Trainer(capacity));
     }
 }
 
@@ -193,18 +200,21 @@ void Studio::createCustomers(vector<string> &args, vector<Customer *> &customerL
         string name, strategy;
         splitNameStrategy(customerString, name, strategy);
         if (strategy == "swt"){
-            customerList.push_back(new SweatyCustomer(name))
-
+            customerList.push_back(new SweatyCustomer(name, sequentialCustomerId));
         } else if (strategy == "chp"){
-
+            customerList.push_back(new CheapCustomer(name, sequentialCustomerId));
         } else if (strategy == "mcl"){
-
+            customerList.push_back(new HeavyMuscleCustomer(name, sequentialCustomerId));
         } else if (strategy == "fbd"){
-
+            customerList.push_back(new FullBodyCustomer(name, sequentialCustomerId));
         }
-
-
+        sequentialCustomerId ++;
     }
+}
 
-
+void Studio::splitNameStrategy(string &customerString, string &name, string &strategy) {
+    //example input for customerString: "Shalom,swt"
+    int comma = customerString.find(',');
+    name = customerString.substr(0, comma);
+    strategy = customerString.substr(comma + 1);
 }
