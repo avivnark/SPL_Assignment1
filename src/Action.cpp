@@ -111,8 +111,9 @@ Close::Close(int id) : BaseAction(), trainerId(id) {
 
 void Close::act(Studio &studio) {
     Trainer *t = studio.getTrainer(trainerId);
-    if (t == nullptr || t->isOpen()) {
+    if (t == nullptr || !t->isOpen()) {
         this->error("Trainer doesn't exist or is not open");
+        return;
     }
     int salary = t->getSalary();
     t->closeTrainer();
