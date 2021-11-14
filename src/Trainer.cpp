@@ -11,10 +11,20 @@ int Trainer::getCapacity() const {
 
 void Trainer::addCustomer(Customer *customer) {
     customersList.push_back(customer);
+    orderList.push_back(customer->getId(), customer.)
 }
 
 void Trainer::removeCustomer(int id) {
-
+    int counter = 0;
+    while(counter<customersList.size()){
+        if(id == customersList[counter]->getId()){
+            delete customersList[counter];
+            erase(customersList,counter);
+            break;
+        }
+        counter++;
+    }
+    customersList[counter]->~Customer();
 }
 
 Customer *Trainer::getCustomer(int id) {
@@ -38,7 +48,7 @@ void Trainer::openTrainer() {
     open = true;
 }
 
-void Trainer::closeTrainer() {
+void Trainer::closeTrainer() {//lo laasot
     open = false;
 }
 
