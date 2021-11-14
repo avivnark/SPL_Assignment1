@@ -1,4 +1,5 @@
 #include "../include/Studio.h"
+#include "map"
 
 using namespace std;
 
@@ -23,6 +24,11 @@ WorkoutType Workout::getType() const {
 }
 
 string Workout::toString() const {
-    return "Workout";
+    map <WorkoutType, string> type_map = {
+            {MIXED, "Mixed"},
+            {ANAEROBIC, "Anaerobic"},
+            {CARDIO, "Cardio"}
+    };
+    return name + ", " + type_map[type] + ", " + to_string(price);
 }
 
