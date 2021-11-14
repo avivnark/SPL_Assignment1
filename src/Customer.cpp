@@ -40,13 +40,15 @@ CheapCustomer::CheapCustomer(string name, int id) : Customer(name, id) {
 }
 
 std::vector<int> CheapCustomer::order(const std::vector<Workout> &workout_options) {
-    int minPrice;
     vector<int> workoutsOrdered;
     int cheapestWorkoutId;
-    int minprice = workout_options.at(0).getPrice();
+    int minPrice = workout_options.at(0).getPrice();
     for (int i = 1; i < workout_options.size(); i++) {
-        if (workout_options.at(i).getPrice() < minPrice)
+        if (workout_options.at(i).getPrice() < minPrice){
             cheapestWorkoutId = workout_options.at(i).getId();
+            minPrice = workout_options.at(i).getPrice();
+        }
+
     }
     workoutsOrdered.push_back(cheapestWorkoutId);
     return workoutsOrdered;
