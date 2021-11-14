@@ -54,10 +54,11 @@ void OpenTrainer::act(Studio &studio) {
     for (auto &customer: customers) {
         t->addCustomer(customer);
     }
+    complete();
 }
 
 string OpenTrainer::toString() const {
-    string log = "open " + to_string(trainerId);
+    string log = "open " + to_string(trainerId) + " ";
     for (auto *customer: customers) {
         log += customer->toString() + " ";
     }
@@ -203,8 +204,8 @@ PrintActionsLog::PrintActionsLog() {
 
 void PrintActionsLog::act(Studio &studio) {
     std::vector<BaseAction *> actionLogs = studio.getActionsLog();
-    for (auto *actionlog: actionLogs) {
-        cout << actionlog->toString() << endl;
+    for (auto *actionLog: actionLogs) {
+        cout << actionLog->toString() << endl;
     }
     complete();
 }

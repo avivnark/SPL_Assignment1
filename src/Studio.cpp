@@ -58,6 +58,7 @@ void Studio::start() {
             createCustomers(customersRawInput,customerList);
             auto * openTrainer = new OpenTrainer(trainerId, customerList);
             openTrainer->act(*this);
+            actionsLog.push_back(openTrainer);
         } else if (command == "close"){
             int trainerId = stoi(args[0]);
             auto * closeAction = new Close(trainerId);
