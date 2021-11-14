@@ -76,7 +76,7 @@ Order::Order(int id) : BaseAction(), trainerId(id) {
 
 void Order::act(Studio &studio) {
     Trainer *trainer = studio.getTrainer(trainerId);
-    if (trainer == nullptr || trainer->isOpen()) {
+    if (trainer == nullptr || !trainer->isOpen()) {
         this->error("Trainer doesn't exist or is not open");
     }
     for (auto * customer: trainer->getCustomers()) {
