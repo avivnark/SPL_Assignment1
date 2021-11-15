@@ -11,7 +11,6 @@ int Trainer::getCapacity() const {
 
 void Trainer::addCustomer(Customer *customer) {
     customersList.push_back(customer);
-    orderList.push_back(customer->getId(), customer.)
 }
 
 void Trainer::removeCustomer(int id) {
@@ -19,8 +18,15 @@ void Trainer::removeCustomer(int id) {
     while(counter<customersList.size()){
         if(id == customersList[counter]->getId()){
             delete customersList[counter];
-            erase(customersList,counter);
+            customersList.erase(customersList.begin() + counter);
             break;
+        }
+        counter++;
+    }
+    counter=0;
+    while(counter<orderList.size()) {
+        if (id == orderList[counter].first) {
+            orderList.erase(orderList.begin()+counter);
         }
         counter++;
     }

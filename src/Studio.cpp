@@ -11,6 +11,17 @@ Studio::Studio() {
     sequentialCustomerId = 0;
 }
 
+Studio::Studio(const Studio &other) : workout_options(other.workout_options), actionsLog(other.actionsLog),
+                                      sequentialCustomerId(other.sequentialCustomerId) {
+    for (auto *trainer: other.trainers) {
+        trainers.push_back(new Trainer(*trainer));
+    }
+    for (auto *baseAction: other.actionsLog) {
+        actionsLog.push_back(new BaseAction(
+                *baseAction)); // I think I should implement each base action parent class it's own copy constructor.
+    }
+}
+
 Studio::Studio(const string &configFilePath) {
     open = true;
     sequentialCustomerId = 0;
@@ -21,10 +32,10 @@ Studio::Studio(const string &configFilePath) {
     trainers.reserve(numOfTrainers);
     getline(MyReadFile, line);
     createNewTrainers(line);
-    int w_id= 0;
+    int w_id = 0;
     while (getline(MyReadFile, line)) {
         // line example: Yoga, Anaerobic, 90
-        if (line[0] == '\0' || line[0] == '#'){
+        if (line[0] == '\0' || line[0] == '#') {
             continue;
         }
         string w_name;
@@ -45,60 +56,53 @@ void Studio::start() {
         string command;
         std::vector<string> args;
         extractCommand(user_input, command, args);
-        if (command == "closeall"){
-            auto * closeAll = new CloseAll();
+        if (command == "closeall") {
+            auto *closeAll = new CloseAll();
             closeAll->act(*this);
             open = false;
             break;
-        }
-        else if (command == "open"){
+        } else if (command == "open") {
             int trainerId = stoi(args[0]);
-            std::vector<Customer*> customerList;
+            std::vector<Customer *> customerList;
             vector<string> customersRawInput = {args.begin() + 1, args.end()};
-            createCustomers(customersRawInput,customerList);
-            auto * openTrainer = new OpenTrainer(trainerId, customerList);
+            createCustomers(customersRawInput, customerList);
+            auto *openTrainer = new OpenTrainer(trainerId, customerList);
             openTrainer->act(*this);
             actionsLog.push_back(openTrainer);
-        } else if (command == "close"){
+        } else if (command == "close") {
             int trainerId = stoi(args[0]);
-            auto * closeAction = new Close(trainerId);
+            auto *closeAction = new Close(trainerId);
             closeAction->act(*this);
             actionsLog.push_back(closeAction);
-        }
-        else if (command == "order"){
+        } else if (command == "order") {
             int trainerId = stoi(args[0]);
-            auto * orderAction = new Order(trainerId);
+            auto *orderAction = new Order(trainerId);
             orderAction->act(*this);
             actionsLog.push_back(orderAction);
-        }
-        else if (command == "move"){
+        } else if (command == "move") {
             int origin_trainer_id = stoi(args[0]);
             int dest_trainer_id = stoi(args[1]);
             int customer_id = stoi(args[2]);
-            auto * moveCustomer = new MoveCustomer(origin_trainer_id, dest_trainer_id, customer_id);
+            auto *moveCustomer = new MoveCustomer(origin_trainer_id, dest_trainer_id, customer_id);
             moveCustomer->act(*this);
             actionsLog.push_back(moveCustomer);
-        }
-        else if (command == "workout_options"){
-            auto * workoutOptions = new PrintWorkoutOptions();
+        } else if (command == "workout_options") {
+            auto *workoutOptions = new PrintWorkoutOptions();
             workoutOptions->act(*this);
             actionsLog.push_back(workoutOptions);
-        }
-        else if (command == "status"){
+        } else if (command == "status") {
             int trainerId = stoi(args[0]);
-            auto * printTrainerStatus = new PrintTrainerStatus(trainerId);
+            auto *printTrainerStatus = new PrintTrainerStatus(trainerId);
             printTrainerStatus->act(*this);
             actionsLog.push_back(printTrainerStatus);
-        }
-        else if (command == "log") {
-            auto * printActionsLog = new PrintActionsLog();
+        } else if (command == "log") {
+            auto *printActionsLog = new PrintActionsLog();
             printActionsLog->act(*this);
-        }
-        else if (command == "backup"){
-            BackupStudio * backupStudio = new BackupStudio();
+        } else if (command == "backup") {
+            BackupStudio *backupStudio = new BackupStudio();
             backupStudio->act(*this);
             actionsLog.push_back(backupStudio);
-        } else{
+        } else {
             cout << "Unidentified command, please try again:" << endl;
         }
         getline(cin, user_input);
@@ -106,7 +110,7 @@ void Studio::start() {
 }
 
 int Studio::getNumOfTrainers() const {
-    return (int)trainers.size();
+    return (int) trainers.size();
 }
 
 Trainer *Studio::getTrainer(int tid) {
@@ -124,7 +128,7 @@ std::vector<Workout> &Studio::getWorkoutOptions() {
     return workout_options;
 }
 
-int Studio::readNumOfTrainers(const string& line) {
+int Studio::readNumOfTrainers(const string &line) {
     return stoi(line);
 }
 
@@ -136,21 +140,21 @@ void Studio::createNewTrainers(string line) {
     }
 }
 
-void Studio::getWorkoutData(const std::string& line, string *w_name, WorkoutType *w_type, int *w_price) {
+void Studio::getWorkoutData(const std::string &line, string *w_name, WorkoutType *w_type, int *w_price) {
     //example line: Yoga, Anaerobic, 90
     unsigned long start_sep = 0;
     unsigned long end_sep = line.find(',');
     *w_name = line.substr(start_sep, end_sep);
     start_sep = end_sep + 2;
-    end_sep = line.find(',',start_sep);
+    end_sep = line.find(',', start_sep);
     *w_type = convertStringToEnum(line.substr(start_sep, end_sep - start_sep));
     start_sep = end_sep + 1;
     end_sep = line.length();
-    *w_price = stoi(line.substr(start_sep,end_sep));
+    *w_price = stoi(line.substr(start_sep, end_sep));
 }
 
-WorkoutType Studio::convertStringToEnum(const std::string& string_workout) {
-    map <string, WorkoutType> type_map = {
+WorkoutType Studio::convertStringToEnum(const std::string &string_workout) {
+    map<string, WorkoutType> type_map = {
             {"Mixed",     MIXED},
             {"Anaerobic", ANAEROBIC},
             {"Cardio",    CARDIO}
@@ -159,15 +163,15 @@ WorkoutType Studio::convertStringToEnum(const std::string& string_workout) {
 }
 
 std::string Studio::convertEnumToString(WorkoutType enum_workout) {
-    map <WorkoutType, string> type_map = {
-            {MIXED, "Mixed"},
+    map<WorkoutType, string> type_map = {
+            {MIXED,     "Mixed"},
             {ANAEROBIC, "Anaerobic"},
-            {CARDIO, "Cardio"}
+            {CARDIO,    "Cardio"}
     };
     return type_map[enum_workout];
 }
 
-bool Studio::extractCommand(const string& user_input, string &command, vector<string> &args) {
+bool Studio::extractCommand(const string &user_input, string &command, vector<string> &args) {
     unsigned int length = user_input.size();
     unsigned long start_sep = 0;
     unsigned long end_sep = user_input.find(' ');
@@ -175,9 +179,9 @@ bool Studio::extractCommand(const string& user_input, string &command, vector<st
     int index = 0;
     start_sep = end_sep + 1;
     end_sep = user_input.find(' ', start_sep);
-    while (start_sep != 0){
-        string arg = user_input.substr(start_sep, end_sep-start_sep);
-        if (raiseOnInvalidArgument(arg)){
+    while (start_sep != 0) {
+        string arg = user_input.substr(start_sep, end_sep - start_sep);
+        if (raiseOnInvalidArgument(arg)) {
             return false;
         }
         args.push_back(arg);
@@ -189,7 +193,7 @@ bool Studio::extractCommand(const string& user_input, string &command, vector<st
 }
 
 bool Studio::raiseOnInvalidArgument(string &arg) {
-    if (arg.empty()){
+    if (arg.empty()) {
         return printInvalidArgumentError();
     }
     // #TODO add more validation checks
@@ -206,16 +210,16 @@ void Studio::createCustomers(vector<string> &args, vector<Customer *> &customerL
     for (auto customerString: args) {
         string name, strategy;
         splitNameStrategy(customerString, name, strategy);
-        if (strategy == "swt"){
+        if (strategy == "swt") {
             customerList.push_back(new SweatyCustomer(name, sequentialCustomerId));
-        } else if (strategy == "chp"){
+        } else if (strategy == "chp") {
             customerList.push_back(new CheapCustomer(name, sequentialCustomerId));
-        } else if (strategy == "mcl"){
+        } else if (strategy == "mcl") {
             customerList.push_back(new HeavyMuscleCustomer(name, sequentialCustomerId));
-        } else if (strategy == "fbd"){
+        } else if (strategy == "fbd") {
             customerList.push_back(new FullBodyCustomer(name, sequentialCustomerId));
         }
-        sequentialCustomerId ++;
+        sequentialCustomerId++;
     }
 }
 

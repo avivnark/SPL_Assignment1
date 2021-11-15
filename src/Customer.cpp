@@ -15,9 +15,6 @@ int Customer::getId() const {
     return id;
 }
 
-Customer::~Customer(){
-}
-
 
 SweatyCustomer::SweatyCustomer(string name, int id) : Customer(name, id) {
 

@@ -11,6 +11,7 @@
 class Studio{
 public:
 	Studio();
+    Studio(const Studio & other);
     Studio(const std::string &configFilePath);
     void start();
     int getNumOfTrainers() const;
