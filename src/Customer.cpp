@@ -1,4 +1,6 @@
 #include "../include/Studio.h"
+#include "../include/Customer.h"
+
 
 using namespace std;
 
@@ -13,6 +15,10 @@ string Customer::getName() const {
 
 int Customer::getId() const {
     return id;
+}
+
+Customer::~Customer() {
+
 }
 
 

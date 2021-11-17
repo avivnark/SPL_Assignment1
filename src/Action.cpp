@@ -103,8 +103,18 @@ MoveCustomer::MoveCustomer(int src, int dst, int customerId)
 }
 
 void MoveCustomer::act(Studio &studio) {
-
-
+    Trainer* src=studio.getTrainer(srcTrainer);
+    Trainer* dst=studio.getTrainer(dstTrainer);
+    if (dst->getCustomers().size() + 1 > dst->getCapacity()){
+        error("Exceeding capacity");
+        return;
+    }
+    if (!dst->isOpen()){
+        error("Trainer is not open");
+        return;
+    }
+    dst->addCustomer(src->getCustomer(id));
+    src->removeCustomer(id);
 }
 
 std::string MoveCustomer::toString() const {
