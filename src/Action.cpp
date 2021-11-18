@@ -1,12 +1,12 @@
 
 #include "../include/Studio.h"
+#include "../include/Action.h"
+
 extern Studio * backup;
 
 using namespace std;
 
-BaseAction::BaseAction() {
-
-}
+BaseAction::BaseAction() = default;
 
 ActionStatus BaseAction::getStatus() const {
     return status;
@@ -31,6 +31,10 @@ void BaseAction::error(std::string errorMsg) {
 
 std::string BaseAction::getErrorMsg() const {
     return errorMsg;
+}
+
+BaseAction::BaseAction(const BaseAction &other) {
+
 }
 
 OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(customersList) {

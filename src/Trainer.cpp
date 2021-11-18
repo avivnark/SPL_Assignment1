@@ -53,6 +53,11 @@ Trainer::~Trainer() {
 
 Trainer &Trainer::operator=(const Trainer &other) {
 
+
+}
+
+Trainer &Trainer::operator=(const Trainer &&other) {
+    return <#initializer#>;
 }
 
 int Trainer::getCapacity() const {
@@ -65,15 +70,15 @@ void Trainer::addCustomer(Customer *customer) {
 }
 
 void Trainer::removeCustomer(int id) {
-    std::vector<Customer *> newCustomerList;
-    for (auto *customer: customersList) {
-        if (id != customer->getId()) {
-            newCustomerList.push_back(new Customer(customer->getName(), customer->getId()));
-        }
-        delete customer;
-    }
-    customersList.clear();
-    customersList = std::move(newCustomerList);
+//    std::vector<Customer *> newCustomerList;
+//    for (auto *customer: customersList) {
+//        if (id != customer->getId()) {
+//            newCustomerList.push_back(new Customer(customer->getName(), customer->getId()));
+//        }
+//        delete customer;
+//    }
+//    customersList.clear();
+//    customersList = std::move(newCustomerList);
 }
 
 Customer *Trainer::getCustomer(int id) {

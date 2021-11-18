@@ -12,6 +12,7 @@ enum WorkoutType{
 class Workout{
 public:
     Workout(int w_id,string w_name, int w_price, WorkoutType w_type);
+    Workout(const Workout& other);
     int getId() const;
     string getName() const;
     int getPrice() const;

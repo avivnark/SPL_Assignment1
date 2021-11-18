@@ -34,3 +34,6 @@ string Workout::toString() const {
     return name + ", " + type_map[type] + ", " + to_string(price);
 }
 
+Workout::Workout(const Workout &other): id(other.id), name(other.name), price(other.price), type(other.type) {
+}
+

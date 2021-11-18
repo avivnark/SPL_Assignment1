@@ -6,9 +6,51 @@
 
 using namespace std;
 
+// bool open;
+//    std::vector<Trainer*> trainers;
+//    std::vector<Workout> workout_options;
+//    std::vector<BaseAction*> actionsLog;
+//    int sequentialCustomerId;
+
 Studio::Studio() {
     open = true;
     sequentialCustomerId = 0;
+}
+
+Studio::Studio(const Studio &other): open(other.open), sequentialCustomerId(other.sequentialCustomerId) {
+    workout_options.reserve(other.workout_options.size());
+    actionsLog.reserve((other.actionsLog.size()));
+    for (int i = 0; i < workout_options.size(); ++i) {
+        Workout w(workout_options[i]);
+        workout_options.push_back(w);
+    }
+    for (auto * trainer:other.trainers) {
+        trainers.push_back(new Trainer(*trainer));
+    }
+}
+
+
+Studio::~Studio() {
+    for (auto * trainer: trainers) {
+        delete trainer;
+    }
+    for (auto * baseAction: actionsLog) {
+        delete baseAction;
+    }
+    trainers.clear();
+    actionsLog.clear();
+}
+
+Studio::Studio(Studio &&other) {
+
+}
+
+Studio &Studio::operator=(const Studio &other) {
+    return <#initializer#>;
+}
+
+Studio &Studio::operator=(const Studio &&other) {
+    return <#initializer#>;
 }
 
 Studio::Studio(const string &configFilePath) {
@@ -225,3 +267,5 @@ void Studio::splitNameStrategy(string &customerString, string &name, string &str
     name = customerString.substr(0, comma);
     strategy = customerString.substr(comma + 1);
 }
+
+
