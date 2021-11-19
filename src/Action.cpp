@@ -37,6 +37,10 @@ BaseAction::BaseAction(const BaseAction &other) {
 
 }
 
+BaseAction::~BaseAction() {
+
+}
+
 OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(customersList) {
 }
 
@@ -62,16 +66,34 @@ void OpenTrainer::act(Studio &studio) {
 }
 
 string OpenTrainer::toString() const {
-    string log = "open " + to_string(trainerId) + " ";
+    string log = "open " + to_string(trainerId);
     for (auto *customer: customers) {
-        log += customer->toString() + " ";
+        log += " " + customer->toString();
     }
     if (getStatus() == COMPLETED) {
-        log += "Completed";
+        log += " Completed";
     } else {
-        log += "Error: " + getErrorMsg();
+        log += " Error: " + getErrorMsg();
     }
     return log;
+}
+
+BaseAction *OpenTrainer::clone() {
+    return new OpenTrainer(*this);
+}
+
+OpenTrainer::OpenTrainer(const OpenTrainer &other):trainerId(other.trainerId) {
+    customers.reserve(other.customers.size());
+    for (auto * otherCustomer: other.customers) {
+        customers.push_back(otherCustomer->clone());
+    }
+}
+
+OpenTrainer::~OpenTrainer() {
+    for (auto * customer:customers) {
+        delete customer;
+    }
+    customers.clear();
 }
 
 Order::Order(int id) : BaseAction(), trainerId(id) {
@@ -93,12 +115,16 @@ void Order::act(Studio &studio) {
 std::string Order::toString() const {
     string log = "order " + to_string(trainerId);
     if (getStatus() == COMPLETED) {
-        log += "Completed";
+        log += " Completed";
     } else {
-        log += "Error: " + getErrorMsg();
+        log += " Error: " + getErrorMsg();
     }
     return log;
 
+}
+
+BaseAction *Order::clone() {
+    return new Order(*this);
 }
 
 MoveCustomer::MoveCustomer(int src, int dst, int customerId)
@@ -125,6 +151,10 @@ std::string MoveCustomer::toString() const {
     return "move " + to_string(srcTrainer) + " " + to_string(dstTrainer) + " " + to_string(id);
 }
 
+BaseAction *MoveCustomer::clone() {
+    return new MoveCustomer(*this);
+}
+
 Close::Close(int id) : BaseAction(), trainerId(id) {
 
 }
@@ -146,6 +176,10 @@ std::string Close::toString() const {
     return "close " + to_string(trainerId);
 }
 
+BaseAction *Close::clone() {
+    return new Close(*this);
+}
+
 CloseAll::CloseAll() {
 
 }
@@ -165,6 +199,10 @@ std::string CloseAll::toString() const {
     return "closeall Completed";
 }
 
+BaseAction *CloseAll::clone() {
+    return new CloseAll(*this);
+}
+
 PrintWorkoutOptions::PrintWorkoutOptions() {
 
 }
@@ -179,6 +217,10 @@ void PrintWorkoutOptions::act(Studio &studio) {
 std::string PrintWorkoutOptions::toString() const {
     return "workout_options";
 
+}
+
+BaseAction *PrintWorkoutOptions::clone() {
+    return new PrintWorkoutOptions(*this);
 }
 
 PrintTrainerStatus::PrintTrainerStatus(int id) : trainerId(id) {
@@ -210,11 +252,15 @@ void PrintTrainerStatus::act(Studio &studio) {
 std::string PrintTrainerStatus::toString() const {
     string log = "status " + to_string(trainerId);
     if (getStatus() == COMPLETED) {
-        log += "Completed";
+        log += " Completed";
     } else {
-        log += "Error: " + getErrorMsg();
+        log += " Error: " + getErrorMsg();
     }
     return log;
+}
+
+BaseAction *PrintTrainerStatus::clone() {
+    return new PrintTrainerStatus(*this);
 }
 
 PrintActionsLog::PrintActionsLog() {
@@ -233,6 +279,10 @@ std::string PrintActionsLog::toString() const {
     return "log";
 }
 
+BaseAction *PrintActionsLog::clone() {
+    return new PrintActionsLog(*this);
+}
+
 BackupStudio::BackupStudio():BaseAction(){
 
 }
@@ -243,6 +293,10 @@ void BackupStudio::act(Studio &studio) {
 
 std::string BackupStudio::toString() const {
     return "backup";
+}
+
+BaseAction *BackupStudio::clone() {
+    return new BackupStudio(*this);
 }
 
 RestoreStudio::RestoreStudio():BaseAction() {
@@ -266,4 +320,8 @@ std::string RestoreStudio::toString() const {
         log += "Error: " + getErrorMsg();
     }
     return log;
+}
+
+BaseAction *RestoreStudio::clone() {
+    return new RestoreStudio(*this);
 }

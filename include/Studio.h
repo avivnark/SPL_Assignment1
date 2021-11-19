@@ -15,7 +15,7 @@ public:
     ~Studio();
     Studio(Studio && other);
     Studio& operator=(const Studio & other);
-    Studio& operator=(const Studio && other);
+    Studio& operator=(Studio && other);
     Studio(const std::string &configFilePath);
     void start();
     int getNumOfTrainers() const;

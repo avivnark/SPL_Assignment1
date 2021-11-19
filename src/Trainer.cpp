@@ -1,6 +1,11 @@
 #include "../include/Studio.h"
 #include "../include/Trainer.h"
 
+//  int capacity;
+//    bool open;
+//    int salary;
+//    std::vector<Customer*> customersList;
+//    std::vector<OrderPair> orderList;
 
 Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
     salary = 0;
@@ -56,8 +61,9 @@ Trainer &Trainer::operator=(const Trainer &other) {
 
 }
 
-Trainer &Trainer::operator=(const Trainer &&other) {
-    return <#initializer#>;
+Trainer &Trainer::operator=(Trainer &&other) {
+
+
 }
 
 int Trainer::getCapacity() const {
