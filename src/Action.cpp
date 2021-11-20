@@ -159,7 +159,7 @@ void MoveCustomer::act(Studio &studio) {
         return;
     }
     dst->addCustomer(src->getCustomer(id));
-    // also need to move customer's orders here
+    //TODO: implement here moving orders from origin to destination trainer
     src->removeCustomer(id);
     if (src->getNumberOfCustomers() == 0) {
         auto *closeTrainer = new Close(srcTrainer);
