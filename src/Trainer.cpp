@@ -11,9 +11,9 @@ Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
     salary = 0;
 }
 
-Trainer::Trainer(const Trainer &other): capacity(other.capacity), salary(other.salary), open(other.open){
+Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open) {
     customersList.reserve(other.customersList.size());
-    for (auto * customer: other.customersList) {
+    for (auto *customer: other.customersList) {
         customersList.push_back(customer);
     }
     orderList.reserve(other.orderList.size());
@@ -22,7 +22,7 @@ Trainer::Trainer(const Trainer &other): capacity(other.capacity), salary(other.s
     }
 }
 
-Trainer::Trainer(Trainer &&other): capacity(other.capacity), salary(other.salary), open(other.open) {
+Trainer::Trainer(Trainer &&other) : capacity(other.capacity), salary(other.salary), open(other.open) {
     for (auto *customer: customersList) { // could possibly cause concurrent issues, should think about it
         delete customer;
         customer = nullptr;
@@ -34,7 +34,7 @@ Trainer::Trainer(Trainer &&other): capacity(other.capacity), salary(other.salary
     }
     orderList.clear();
     customersList.reserve(other.customersList.size());
-    for (auto * customer: other.customersList) {
+    for (auto *customer: other.customersList) {
         customersList.push_back(customer);
     }
     orderList.reserve(other.orderList.size());
@@ -106,7 +106,7 @@ void Trainer::openTrainer() {
 }
 
 void Trainer::closeTrainer() {
-    for (auto * customer: customersList) {
+    for (auto *customer: customersList) {
         delete customer;
     }
     customersList.clear();

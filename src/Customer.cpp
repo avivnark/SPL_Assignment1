@@ -54,7 +54,7 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout> &workout_option
     int cheapestWorkoutId;
     int minPrice = workout_options.at(0).getPrice();
     for (int i = 1; i < workout_options.size(); i++) {
-        if (workout_options.at(i).getPrice() < minPrice){
+        if (workout_options.at(i).getPrice() < minPrice) {
             cheapestWorkoutId = workout_options.at(i).getId();
             minPrice = workout_options.at(i).getPrice();
         }
@@ -79,7 +79,7 @@ HeavyMuscleCustomer::HeavyMuscleCustomer(string name, int id) : Customer(name, i
 
 std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout> &workout_options) {
     vector<int> workoutsOrdered;
-    for (const auto & workout_option : workout_options) {
+    for (const auto &workout_option: workout_options) {
         if (workout_option.getType() == ANAEROBIC)
             workoutsOrdered.push_back(workout_option.getId());
     }

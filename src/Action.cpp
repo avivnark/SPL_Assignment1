@@ -2,7 +2,7 @@
 #include "../include/Studio.h"
 #include "../include/Action.h"
 
-extern Studio * backup;
+extern Studio *backup;
 
 using namespace std;
 
@@ -63,7 +63,7 @@ void OpenTrainer::act(Studio &studio) {
         return;
     }
     t->openTrainer();
-    for (auto * customer: customers) {
+    for (auto *customer: customers) {
         t->addCustomer(customer->clone());
     }
     complete();
@@ -86,15 +86,15 @@ BaseAction *OpenTrainer::clone() {
     return new OpenTrainer(*this);
 }
 
-OpenTrainer::OpenTrainer(const OpenTrainer &other):trainerId(other.trainerId) {
+OpenTrainer::OpenTrainer(const OpenTrainer &other) : trainerId(other.trainerId) {
     customers.reserve(other.customers.size());
-    for (auto * otherCustomer: other.customers) {
+    for (auto *otherCustomer: other.customers) {
         customers.push_back(otherCustomer->clone());
     }
 }
 
 OpenTrainer::~OpenTrainer() {
-    for (auto * customer:customers) {
+    for (auto *customer: customers) {
         delete customer;
     }
     customers.clear();
@@ -102,7 +102,7 @@ OpenTrainer::~OpenTrainer() {
 
 
 BaseAction &OpenTrainer::operator=(BaseAction &&other) {
-    customers = std::move(dynamic_cast<OpenTrainer&&>(other).customers);
+    customers = std::move(dynamic_cast<OpenTrainer &&>(other).customers);
     return *this;
 }
 
@@ -116,7 +116,7 @@ void Order::act(Studio &studio) {
         this->error("Trainer doesn't exist or is not open");
         return;
     }
-    for (auto * customer: trainer->getCustomers()) {
+    for (auto *customer: trainer->getCustomers()) {
         std::vector<int> customerWorkoutOrders = customer->order(studio.getWorkoutOptions());
         trainer->order(customer->getId(), customerWorkoutOrders, studio.getWorkoutOptions());
     }
@@ -144,24 +144,24 @@ MoveCustomer::MoveCustomer(int src, int dst, int customerId)
 }
 
 void MoveCustomer::act(Studio &studio) {
-    Trainer* src=studio.getTrainer(srcTrainer);
-    Trainer* dst=studio.getTrainer(dstTrainer);
-    if (src == nullptr || dst == nullptr){
+    Trainer *src = studio.getTrainer(srcTrainer);
+    Trainer *dst = studio.getTrainer(dstTrainer);
+    if (src == nullptr || dst == nullptr) {
         error("Cannot move customer");
         return;
     }
-    if (dst->getCustomers().size() + 1 > dst->getCapacity()){
+    if (dst->getCustomers().size() + 1 > dst->getCapacity()) {
         error("Cannot move customer");
         return;
     }
-    if (!dst->isOpen() || !src->isOpen()){
+    if (!dst->isOpen() || !src->isOpen()) {
         error("Cannot move customer");
         return;
     }
     dst->addCustomer(src->getCustomer(id));
     // also need to move customer's orders here
     src->removeCustomer(id);
-    if (src->getNumberOfCustomers() == 0){
+    if (src->getNumberOfCustomers() == 0) {
         auto *closeTrainer = new Close(srcTrainer);
         closeTrainer->act(studio);
     }
@@ -222,7 +222,7 @@ void CloseAll::act(Studio &studio) {
     for (int i = 0; i < studio.getNumOfTrainers(); ++i) {
         Trainer *trainer = studio.getTrainer(i);
         if (trainer->isOpen()) {
-            Close * closeTrainer = new Close(i);
+            Close *closeTrainer = new Close(i);
             closeTrainer->act(studio);
         }
         complete();
@@ -265,17 +265,18 @@ void PrintTrainerStatus::act(Studio &studio) {
     Trainer *trainer = studio.getTrainer(trainerId);
     string status = "Trainer " + to_string(trainerId) + " status: ";
     bool isOpen = trainer->isOpen();
-    if (isOpen){
+    if (isOpen) {
         status += "open\nCustomers:\n";
-        for (auto * customer: trainer->getCustomers()) {
+        for (auto *customer: trainer->getCustomers()) {
             status += to_string(customer->getId()) + " " + customer->getName() + "\n";
         }
         status += "Orders:\n";
         for (OrderPair pair: trainer->getOrders()) { // pair -> (customer_id, workout)
-            status += pair.second.getName() + " " + to_string(pair.second.getPrice()) + "NIS " + to_string(pair.first) + "\n";
+            status += pair.second.getName() + " " + to_string(pair.second.getPrice()) + "NIS " + to_string(pair.first) +
+                      "\n";
         }
         status += "Current Trainer's Salary: " + to_string(trainer->getSalary()) + "NIS";
-    } else{
+    } else {
         status += "closed";
     }
     cout << status << endl;
@@ -317,7 +318,7 @@ BaseAction *PrintActionsLog::clone() {
     return new PrintActionsLog(*this);
 }
 
-BackupStudio::BackupStudio():BaseAction(){
+BackupStudio::BackupStudio() : BaseAction() {
 
 }
 
@@ -333,12 +334,12 @@ BaseAction *BackupStudio::clone() {
     return new BackupStudio(*this);
 }
 
-RestoreStudio::RestoreStudio():BaseAction() {
+RestoreStudio::RestoreStudio() : BaseAction() {
 
 }
 
 void RestoreStudio::act(Studio &studio) {
-    if (backup == nullptr){
+    if (backup == nullptr) {
         error("No backup available");
         return;
     }

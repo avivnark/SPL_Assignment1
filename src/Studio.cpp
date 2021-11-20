@@ -63,7 +63,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
         for (auto *trainer: other.trainers) {
             trainers.push_back(new Trainer(*trainer));
         }
-        for (auto * baseAction: other.actionsLog) {
+        for (auto *baseAction: other.actionsLog) {
             actionsLog.push_back(baseAction->clone());
         }
     }
@@ -159,7 +159,7 @@ void Studio::start() {
             backupStudio->act(*this);
             actionsLog.push_back(backupStudio);
         } else if (command == "restore") {
-            auto * restoreStudio = new RestoreStudio();
+            auto *restoreStudio = new RestoreStudio();
             restoreStudio->act(*this);
             actionsLog.push_back(restoreStudio);
         } else {
