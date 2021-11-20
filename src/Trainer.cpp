@@ -1,7 +1,63 @@
 #include "../include/Studio.h"
+#include "../include/Trainer.h"
+
+//  int capacity;
+//    bool open;
+//    int salary;
+//    std::vector<Customer*> customersList;
+//    std::vector<OrderPair> orderList;
 
 Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
+    salary = 0;
+}
 
+Trainer::Trainer(const Trainer &other): capacity(other.capacity), salary(other.salary), open(other.open){
+    customersList.reserve(other.customersList.size());
+    for (auto * customer: other.customersList) {
+        customersList.push_back(customer);
+    }
+    orderList.reserve(other.orderList.size());
+    for (auto pair: other.orderList) {
+        orderList.push_back(pair);
+    }
+}
+
+Trainer::Trainer(Trainer &&other): capacity(other.capacity), salary(other.salary), open(other.open) {
+    for (auto *customer: customersList) { // could possibly cause concurrent issues, should think about it
+        delete customer;
+        customer = nullptr;
+    }
+    customersList.clear();
+    for (auto pair: orderList) { // could possibly cause concurrent issues, should think about it
+        delete &pair;
+        //pair = nullptr;
+    }
+    orderList.clear();
+    customersList.reserve(other.customersList.size());
+    for (auto * customer: other.customersList) {
+        customersList.push_back(customer);
+    }
+    orderList.reserve(other.orderList.size());
+    for (auto pair: other.orderList) {
+        orderList.push_back(pair);
+    }
+}
+
+Trainer::~Trainer() {
+    for (auto *customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
+    orderList.clear();
+}
+
+Trainer &Trainer::operator=(const Trainer &other) {
+
+
+}
+
+Trainer &Trainer::operator=(Trainer &&other) {
+    customersList = std::move(other.customersList);
 }
 
 int Trainer::getCapacity() const {
@@ -10,27 +66,21 @@ int Trainer::getCapacity() const {
 }
 
 void Trainer::addCustomer(Customer *customer) {
-    customersList.push_back(customer);
+    customersList.push_back(customer->clone());
 }
 
 void Trainer::removeCustomer(int id) {
-    int counter = 0;
-    while(counter<customersList.size()){
-        if(id == customersList[counter]->getId()){
-            delete customersList[counter];
-            customersList.erase(customersList.begin() + counter);
+    Customer *customerToDelete = getCustomer(id);
+//    delete customerToDelete;
+    int position = 0;
+    for (auto *customer: customersList) {
+        if (customer->getId() == id) {
+            delete customer;
             break;
         }
-        counter++;
+        position++;
     }
-    counter=0;
-    while(counter<orderList.size()) {
-        if (id == orderList[counter].first) {
-            orderList.erase(orderList.begin()+counter);
-        }
-        counter++;
-    }
-    customersList[counter]->~Customer();
+    customersList.erase(customersList.begin() + position);
 }
 
 Customer *Trainer::getCustomer(int id) {
@@ -54,20 +104,17 @@ void Trainer::openTrainer() {
     open = true;
 }
 
-void Trainer::closeTrainer() {//lo laasot
-    open = false;
-    for (auto *customer: customersList) { // could possibly cause concurrent issues, should think about it
-        removeCustomer(customer->getId());
+void Trainer::closeTrainer() {
+    for (auto * customer: customersList) {
+        delete customer;
     }
     customersList.clear();
+    orderList.clear();
+    open = false;
 }
 
 int Trainer::getSalary() {
-    int totalSalary = 0;
-    for(OrderPair orderPair: orderList){
-        totalSalary += orderPair.second.getPrice();
-    }
-    return totalSalary;
+    return salary;
 }
 
 bool Trainer::isOpen() {
@@ -80,5 +127,12 @@ void Trainer::order(const int customer_id, const std::vector<int> workout_ids, c
     for (int w_id: workout_ids) {
         OrderPair orderPair(customer_id, workout_options[w_id]);
         orderList.push_back(orderPair);
+        salary += orderPair.second.getPrice();
     }
 }
+
+unsigned long Trainer::getNumberOfCustomers() {
+    return customersList.size();
+}
+
+

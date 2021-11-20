@@ -11,15 +11,87 @@ Studio::Studio() {
     sequentialCustomerId = 0;
 }
 
-Studio::Studio(const Studio &other) : workout_options(other.workout_options), actionsLog(other.actionsLog),
-                                      sequentialCustomerId(other.sequentialCustomerId) {
+Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(other.sequentialCustomerId) {
+    workout_options.reserve(other.workout_options.size());
+    workout_options.assign(other.workout_options.begin(), other.workout_options.end());
+
+    trainers.reserve(other.trainers.size());
+    actionsLog.reserve(other.actionsLog.size());
+
     for (auto *trainer: other.trainers) {
         trainers.push_back(new Trainer(*trainer));
     }
-    for (auto *baseAction: other.actionsLog) {
-        actionsLog.push_back(new BaseAction(
-                *baseAction)); // I think I should implement each base action parent class it's own copy constructor.
+    for (auto *otherBaseAction: other.actionsLog) {
+        actionsLog.push_back(otherBaseAction->clone());
     }
+}
+
+
+Studio::~Studio() {
+    for (auto *trainer: trainers) {
+        delete trainer;
+    }
+    for (auto *baseAction: actionsLog) {
+        delete baseAction;
+    }
+    workout_options.clear();
+    trainers.clear();
+    actionsLog.clear();
+}
+
+Studio::Studio(Studio &&other) {
+
+}
+
+Studio &Studio::operator=(const Studio &other) { // copy assignment operator
+    if (this != &other) {
+        open = other.open;
+        sequentialCustomerId = other.sequentialCustomerId;
+        // clear current resources:
+        workout_options.clear();
+        for (auto *trainer: trainers) {
+            delete trainer;
+        }
+        for (auto *baseAction: actionsLog) {
+            delete baseAction;
+        }
+        trainers.clear();
+        actionsLog.clear();
+
+        //copy new studio into this
+        workout_options.assign(other.workout_options.begin(), other.workout_options.end());
+        for (auto *trainer: other.trainers) {
+            trainers.push_back(new Trainer(*trainer));
+        }
+        for (auto * baseAction: other.actionsLog) {
+            actionsLog.push_back(baseAction->clone());
+        }
+    }
+    return *this;
+}
+
+Studio &Studio::operator=(Studio &&other) {
+    trainers = std::move(other.trainers);
+//    actionsLog = std::move(other.actionsLog);
+//    for (auto *trainer: trainers) {
+//        delete trainer;
+//    }
+    for (auto *baseAction: actionsLog) {
+        delete baseAction;
+    }
+//
+//    trainers.clear();
+    actionsLog.clear();
+//
+//    for (auto *otherTrainer: other.trainers) {
+//        trainers.push_back(otherTrainer);
+//    }
+    for (auto* otherBaseAction: other.actionsLog){
+        actionsLog.push_back(otherBaseAction);
+    }
+//
+//    other.trainers.clear();
+    other.actionsLog.clear();
 }
 
 Studio::Studio(const string &configFilePath) {
@@ -68,6 +140,7 @@ void Studio::start() {
             createCustomers(customersRawInput, customerList);
             auto *openTrainer = new OpenTrainer(trainerId, customerList);
             openTrainer->act(*this);
+            customerList.clear();
             actionsLog.push_back(openTrainer);
         } else if (command == "close") {
             int trainerId = stoi(args[0]);
@@ -98,10 +171,15 @@ void Studio::start() {
         } else if (command == "log") {
             auto *printActionsLog = new PrintActionsLog();
             printActionsLog->act(*this);
+            actionsLog.push_back(printActionsLog);
         } else if (command == "backup") {
-            BackupStudio *backupStudio = new BackupStudio();
+            auto *backupStudio = new BackupStudio();
             backupStudio->act(*this);
             actionsLog.push_back(backupStudio);
+        } else if (command == "restore") {
+            auto * restoreStudio = new RestoreStudio();
+            restoreStudio->act(*this);
+            actionsLog.push_back(restoreStudio);
         } else {
             cout << "Unidentified command, please try again:" << endl;
         }
