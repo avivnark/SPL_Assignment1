@@ -1,38 +1,9 @@
-/Users/ronlevi/CLionProjects/SPL_Assignment1/cmake-build-debug/SPL_Assignment1 /Users/ronlevi/CLionProjects/SPL_Assignment1/src/ExampleInput.txt
-Studio is now Open!
 open 2 ron,mcl or,chp
-status 2
-Trainer 2 status: open
-Customers:
-0 ron
-1 or
-Orders:
-Current Trainer's Salary: 0NIS
+open 3 aviv,fbd
 order 2
-status 2
-Trainer 2 status: open
-Customers:
-0 ron
-1 or
-Orders:
-Yoga 90NIS 0
-Pilates 110NIS 0
-Rope Jumps 70NIS 1
-Current Trainer's Salary: 270NIS
-status 3
-Trainer 3 status: closed
 order 3
-Error: Trainer doesn't exist or is not open
-log
-open 2 ron,mcl or,chp Completed
-status 2Completed
-order 2Completed
-status 2Completed
-status 3Completed
-order 3Completed
-closeall
-Trainer 2 closed. Salary 270NIS
-SPL_Assignment1(91470,0x11320a600) malloc: *** error for object 0x7ff7b2841770: pointer being freed was not allocated
-SPL_Assignment1(91470,0x11320a600) malloc: *** set a breakpoint in malloc_error_break to debug
-
-Process finished with exit code 134 (interrupted by signal 6: SIGABRT)
+backup
+status 2
+move 2 3 1
+status 3
+restore

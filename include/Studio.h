@@ -40,6 +40,7 @@ private:
     bool raiseOnInvalidArgument(string & arg);
     bool printInvalidArgumentError();
     void splitNameStrategy(string & customerString, string & name, string & strategy);
+    void deleteCustomers(std::vector<Customer*> & customersList);
 };
 
 #endif

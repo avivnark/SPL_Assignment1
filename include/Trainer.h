@@ -9,13 +9,6 @@ typedef std::pair<int, Workout> OrderPair;
 
 class Trainer{
 public:
-    /*
-     * right now destroying trainer deletes it's customer list.
-     * should reconsider.
-     * Are the customers are his to delete?
-     * Is it efficient or necessary to clone customers into a trainer or is it enough to point the studio's customers?
-     */
-
     Trainer(int t_capacity);
     Trainer(const Trainer& other);
     ~Trainer();
@@ -33,6 +26,8 @@ public:
     void closeTrainer();
     int getSalary();
     bool isOpen();
+
+    unsigned long getNumberOfCustomers();
 private:
     int capacity;
     bool open;

@@ -17,6 +17,7 @@ public:
     BaseAction();
     BaseAction(const BaseAction & other);
     virtual ~BaseAction();
+    virtual BaseAction& operator=(BaseAction && other);
     ActionStatus getStatus() const;
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
@@ -36,6 +37,7 @@ public:
     OpenTrainer(int id, std::vector<Customer *> &customersList);
     OpenTrainer(const OpenTrainer& other);
     ~OpenTrainer();
+    BaseAction& operator=(BaseAction && other);
     void act(Studio &studio);
     std::string toString() const;
     BaseAction* clone();

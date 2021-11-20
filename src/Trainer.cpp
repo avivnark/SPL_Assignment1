@@ -44,15 +44,10 @@ Trainer::Trainer(Trainer &&other): capacity(other.capacity), salary(other.salary
 }
 
 Trainer::~Trainer() {
-    for (auto *customer: customersList) { // could possibly cause concurrent issues, should think about it
+    for (auto *customer: customersList) {
         delete customer;
-        //customer = nullptr;
     }
     customersList.clear();
-    for (auto pair: orderList) { // could possibly cause concurrent issues, should think about it
-        delete &pair;
-        //pair = nullptr;
-    }
     orderList.clear();
 }
 
@@ -62,8 +57,7 @@ Trainer &Trainer::operator=(const Trainer &other) {
 }
 
 Trainer &Trainer::operator=(Trainer &&other) {
-
-
+    customersList = std::move(other.customersList);
 }
 
 int Trainer::getCapacity() const {
@@ -72,19 +66,21 @@ int Trainer::getCapacity() const {
 }
 
 void Trainer::addCustomer(Customer *customer) {
-    customersList.push_back(customer);
+    customersList.push_back(customer->clone());
 }
 
 void Trainer::removeCustomer(int id) {
-//    std::vector<Customer *> newCustomerList;
-//    for (auto *customer: customersList) {
-//        if (id != customer->getId()) {
-//            newCustomerList.push_back(new Customer(customer->getName(), customer->getId()));
-//        }
-//        delete customer;
-//    }
-//    customersList.clear();
-//    customersList = std::move(newCustomerList);
+    Customer *customerToDelete = getCustomer(id);
+//    delete customerToDelete;
+    int position = 0;
+    for (auto *customer: customersList) {
+        if (customer->getId() == id) {
+            delete customer;
+            break;
+        }
+        position++;
+    }
+    customersList.erase(customersList.begin() + position);
 }
 
 Customer *Trainer::getCustomer(int id) {
@@ -109,6 +105,11 @@ void Trainer::openTrainer() {
 }
 
 void Trainer::closeTrainer() {
+    for (auto * customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
+    orderList.clear();
     open = false;
 }
 
@@ -128,6 +129,10 @@ void Trainer::order(const int customer_id, const std::vector<int> workout_ids, c
         orderList.push_back(orderPair);
         salary += orderPair.second.getPrice();
     }
+}
+
+unsigned long Trainer::getNumberOfCustomers() {
+    return customersList.size();
 }
 
 

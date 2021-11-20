@@ -20,11 +20,10 @@ Studio::Studio() {
 Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(other.sequentialCustomerId) {
     workout_options.reserve(other.workout_options.size());
     workout_options.assign(other.workout_options.begin(), other.workout_options.end());
-//    actionsLog.reserve((other.actionsLog.size()));
-//    for (int i = 0; i < workout_options.size(); ++i) {
-//        Workout w(workout_options[i]);
-//        workout_options.push_back(w);
-//    }
+
+    trainers.reserve(other.trainers.size());
+    actionsLog.reserve(other.actionsLog.size());
+
     for (auto *trainer: other.trainers) {
         trainers.push_back(new Trainer(*trainer));
     }
@@ -41,6 +40,7 @@ Studio::~Studio() {
     for (auto *baseAction: actionsLog) {
         delete baseAction;
     }
+    workout_options.clear();
     trainers.clear();
     actionsLog.clear();
 }
@@ -53,8 +53,19 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
     if (this != &other) {
         open = other.open;
         sequentialCustomerId = other.sequentialCustomerId;
-        workout_options.assign(other.workout_options.begin(), other.workout_options.end());
+        // clear current resources:
+        workout_options.clear();
+        for (auto *trainer: trainers) {
+            delete trainer;
+        }
+        for (auto *baseAction: actionsLog) {
+            delete baseAction;
+        }
+        trainers.clear();
+        actionsLog.clear();
 
+        //copy new studio into this
+        workout_options.assign(other.workout_options.begin(), other.workout_options.end());
         for (auto *trainer: other.trainers) {
             trainers.push_back(new Trainer(*trainer));
         }
@@ -66,24 +77,26 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
 }
 
 Studio &Studio::operator=(Studio &&other) {
-    for (auto *trainer: trainers) {
-        delete trainer;
-    }
+    trainers = std::move(other.trainers);
+//    actionsLog = std::move(other.actionsLog);
+//    for (auto *trainer: trainers) {
+//        delete trainer;
+//    }
     for (auto *baseAction: actionsLog) {
         delete baseAction;
     }
-
-    trainers.clear();
+//
+//    trainers.clear();
     actionsLog.clear();
-
-    for (auto *otherTrainer: other.trainers) {
-        trainers.push_back(otherTrainer);
-    }
+//
+//    for (auto *otherTrainer: other.trainers) {
+//        trainers.push_back(otherTrainer);
+//    }
     for (auto* otherBaseAction: other.actionsLog){
         actionsLog.push_back(otherBaseAction);
     }
-
-    other.trainers.clear();
+//
+//    other.trainers.clear();
     other.actionsLog.clear();
 }
 
@@ -133,6 +146,8 @@ void Studio::start() {
             createCustomers(customersRawInput, customerList);
             auto *openTrainer = new OpenTrainer(trainerId, customerList);
             openTrainer->act(*this);
+            customerList.clear();
+//            deleteCustomers(customerList);
             actionsLog.push_back(openTrainer);
         } else if (command == "close") {
             int trainerId = stoi(args[0]);
@@ -168,6 +183,10 @@ void Studio::start() {
             auto *backupStudio = new BackupStudio();
             backupStudio->act(*this);
             actionsLog.push_back(backupStudio);
+        } else if (command == "restore") {
+            auto * restoreStudio = new RestoreStudio();
+            restoreStudio->act(*this);
+            actionsLog.push_back(restoreStudio);
         } else {
             cout << "Unidentified command, please try again:" << endl;
         }
@@ -294,6 +313,13 @@ void Studio::splitNameStrategy(string &customerString, string &name, string &str
     int comma = customerString.find(',');
     name = customerString.substr(0, comma);
     strategy = customerString.substr(comma + 1);
+}
+
+void Studio::deleteCustomers(vector<Customer *> &customersList) {
+    for (auto * customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
 }
 
 

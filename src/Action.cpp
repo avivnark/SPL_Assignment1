@@ -18,8 +18,8 @@ void BaseAction::complete() {
 
 void BaseAction::error(std::string errorMsg) {
     status = ERROR;
-    errorMsg = errorMsg;
-    std::cout << "Error: " << errorMsg << std::endl;
+    this->errorMsg = "Error: " + errorMsg;
+    std::cout << errorMsg << std::endl;
 }
 
 //void BaseAction::logger(string & command, vector<string>& *arguments){
@@ -41,6 +41,9 @@ BaseAction::~BaseAction() {
 
 }
 
+BaseAction &BaseAction::operator=(BaseAction &&other) {
+}
+
 OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(customersList) {
 }
 
@@ -59,8 +62,8 @@ void OpenTrainer::act(Studio &studio) {
         return;
     }
     t->openTrainer();
-    for (auto &customer: customers) {
-        t->addCustomer(customer);
+    for (auto * customer: customers) {
+        t->addCustomer(customer->clone());
     }
     complete();
 }
@@ -73,7 +76,7 @@ string OpenTrainer::toString() const {
     if (getStatus() == COMPLETED) {
         log += " Completed";
     } else {
-        log += " Error: " + getErrorMsg();
+        log += " " + getErrorMsg();
     }
     return log;
 }
@@ -96,6 +99,11 @@ OpenTrainer::~OpenTrainer() {
     customers.clear();
 }
 
+
+BaseAction &OpenTrainer::operator=(BaseAction &&other) {
+    customers = std::move(dynamic_cast<OpenTrainer&&>(other).customers);
+}
+
 Order::Order(int id) : BaseAction(), trainerId(id) {
 
 }
@@ -104,6 +112,7 @@ void Order::act(Studio &studio) {
     Trainer *trainer = studio.getTrainer(trainerId);
     if (trainer == nullptr || !trainer->isOpen()) {
         this->error("Trainer doesn't exist or is not open");
+        return;
     }
     for (auto * customer: trainer->getCustomers()) {
         std::vector<int> customerWorkoutOrders = customer->order(studio.getWorkoutOptions());
@@ -117,7 +126,7 @@ std::string Order::toString() const {
     if (getStatus() == COMPLETED) {
         log += " Completed";
     } else {
-        log += " Error: " + getErrorMsg();
+        log += " " + getErrorMsg();
     }
     return log;
 
@@ -135,20 +144,37 @@ MoveCustomer::MoveCustomer(int src, int dst, int customerId)
 void MoveCustomer::act(Studio &studio) {
     Trainer* src=studio.getTrainer(srcTrainer);
     Trainer* dst=studio.getTrainer(dstTrainer);
-    if (dst->getCustomers().size() + 1 > dst->getCapacity()){
-        error("Exceeding capacity");
+    if (src == nullptr || dst == nullptr){
+        error("Cannot move customer");
         return;
     }
-    if (!dst->isOpen()){
-        error("Trainer is not open");
+    if (dst->getCustomers().size() + 1 > dst->getCapacity()){
+        error("Cannot move customer");
+        return;
+    }
+    if (!dst->isOpen() || !src->isOpen()){
+        error("Cannot move customer");
         return;
     }
     dst->addCustomer(src->getCustomer(id));
+    // also need to move customer's orders here
     src->removeCustomer(id);
+    if (src->getNumberOfCustomers() == 0){
+        auto *closeTrainer = new Close(srcTrainer);
+        closeTrainer->act(studio);
+    }
+    complete();
 }
 
 std::string MoveCustomer::toString() const {
-    return "move " + to_string(srcTrainer) + " " + to_string(dstTrainer) + " " + to_string(id);
+    string log = "move " + to_string(srcTrainer) + " " + to_string(dstTrainer) + " " + to_string(id);
+    if (getStatus() == COMPLETED) {
+        log += " Completed";
+    } else {
+        log += " " + getErrorMsg();
+    }
+    return log;
+
 }
 
 BaseAction *MoveCustomer::clone() {
@@ -173,7 +199,13 @@ void Close::act(Studio &studio) {
 }
 
 std::string Close::toString() const {
-    return "close " + to_string(trainerId);
+    string log = "close " + to_string(trainerId);
+    if (getStatus() == COMPLETED) {
+        log += " Completed";
+    } else {
+        log += " " + getErrorMsg();
+    }
+    return log;
 }
 
 BaseAction *Close::clone() {
@@ -215,7 +247,7 @@ void PrintWorkoutOptions::act(Studio &studio) {
 }
 
 std::string PrintWorkoutOptions::toString() const {
-    return "workout_options";
+    return "workout_options Completed";
 
 }
 
@@ -254,7 +286,7 @@ std::string PrintTrainerStatus::toString() const {
     if (getStatus() == COMPLETED) {
         log += " Completed";
     } else {
-        log += " Error: " + getErrorMsg();
+        log += " " + getErrorMsg();
     }
     return log;
 }
@@ -292,7 +324,7 @@ void BackupStudio::act(Studio &studio) {
 }
 
 std::string BackupStudio::toString() const {
-    return "backup";
+    return "backup Completed";
 }
 
 BaseAction *BackupStudio::clone() {
@@ -308,7 +340,7 @@ void RestoreStudio::act(Studio &studio) {
         error("No backup available");
         return;
     }
-    backup = new Studio(studio);
+    studio = Studio(*backup);
     complete();
 }
 
@@ -317,7 +349,7 @@ std::string RestoreStudio::toString() const {
     if (getStatus() == COMPLETED) {
         log += "Completed";
     } else {
-        log += "Error: " + getErrorMsg();
+        log += getErrorMsg();
     }
     return log;
 }
