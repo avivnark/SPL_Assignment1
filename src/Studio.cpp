@@ -72,7 +72,8 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
 
 Studio &Studio::operator=(Studio &&other) {
     trainers = std::move(other.trainers);
-    actionsLog = std::move(other.actionsLog); // causes error on backup -> restore - specifically on other.actionsLog.clear();
+    actionsLog = std::move(other.actionsLog);
+    return *this;
 }
 
 Studio::Studio(const string &configFilePath) {

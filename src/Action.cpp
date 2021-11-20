@@ -42,6 +42,7 @@ BaseAction::~BaseAction() {
 }
 
 BaseAction &BaseAction::operator=(BaseAction &&other) {
+    return *this;
 }
 
 OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(customersList) {
@@ -102,6 +103,7 @@ OpenTrainer::~OpenTrainer() {
 
 BaseAction &OpenTrainer::operator=(BaseAction &&other) {
     customers = std::move(dynamic_cast<OpenTrainer&&>(other).customers);
+    return *this;
 }
 
 Order::Order(int id) : BaseAction(), trainerId(id) {

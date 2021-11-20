@@ -52,12 +52,13 @@ Trainer::~Trainer() {
 }
 
 Trainer &Trainer::operator=(const Trainer &other) {
-
+    return *this;
 
 }
 
 Trainer &Trainer::operator=(Trainer &&other) {
     customersList = std::move(other.customersList);
+    return *this;
 }
 
 int Trainer::getCapacity() const {
