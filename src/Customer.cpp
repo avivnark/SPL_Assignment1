@@ -79,11 +79,14 @@ HeavyMuscleCustomer::HeavyMuscleCustomer(string name, int id) : Customer(name, i
 
 std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout> &workout_options) {
     vector<int> workoutsOrdered;
-    for (const auto &workout_option: workout_options) {
+    for (const auto& workout_option: workout_options) {
         if (workout_option.getType() == ANAEROBIC)
             workoutsOrdered.push_back(workout_option.getId());
     }
-    std::sort(workoutsOrdered.begin(), workoutsOrdered.end());
+    std::sort(workoutsOrdered.begin(), workoutsOrdered.end(),
+              [&workout_options](int id1, int id2) -> bool{
+                  return workout_options.at(id1).getPrice() - workout_options.at(id2).getPrice(); // #TODO check if that order is descending
+    });
     return workoutsOrdered;
 }
 
@@ -101,54 +104,56 @@ FullBodyCustomer::FullBodyCustomer(string name, int id) : Customer(name, id) {
 
 std::vector<int> FullBodyCustomer::order(const std::vector<Workout> &workout_options) {
     vector<int> workoutsOrdered;
-    int cheapestCardioId;
-    int minPriceCardio;
-    bool foundCardio = false;
-    int expensiveMixId;
-    int maxPriceMix;
-    bool foundMix = false;
-    int cheapestAnaerobicId;
-    int minPriceAnaerobic;
-    bool foundAnaerobic = false;
+    int cheapestCardioId, minPriceCardio;
+    int cheapestAnaerobicId, minPriceAnaerobic;
+    int expensiveMixId, maxPriceMix;
+    bool foundCardio,foundMix, foundAnaerobic;
+    foundCardio = foundMix = foundAnaerobic = false;
     for (int i = 1; i < workout_options.size(); i++) {
-        if (!foundCardio) {
-            cheapestCardioId = workout_options.at(i).getId();
-            minPriceCardio = workout_options.at(i).getPrice();
-            foundCardio = true;
-        }
         if (workout_options.at(i).getType() == CARDIO) {
-            if (workout_options.at(i).getPrice() < minPriceCardio) {
+            if (!foundCardio) {
+                cheapestCardioId = workout_options.at(i).getId();
+                minPriceCardio = workout_options.at(i).getPrice();
+                foundCardio = true;
+            }
+            else if (workout_options.at(i).getPrice() < minPriceCardio) {
                 cheapestCardioId = workout_options.at(i).getId();
                 minPriceCardio = workout_options.at(i).getPrice();
             }
         }
-        if (!foundMix) {
-            expensiveMixId = workout_options.at(i).getId();
-            maxPriceMix = workout_options.at(i).getPrice();
-            foundMix = true;
-        }
         if (workout_options.at(i).getType() == MIXED) {
-            if (workout_options.at(i).getPrice() > maxPriceMix) {
+            if (!foundMix) {
+                expensiveMixId = workout_options.at(i).getId();
+                maxPriceMix = workout_options.at(i).getPrice();
+                foundMix = true;
+            }
+            else if (workout_options.at(i).getPrice() > maxPriceMix) {
                 expensiveMixId = workout_options.at(i).getId();
                 maxPriceMix = workout_options.at(i).getPrice();
             }
         }
-        if (!foundAnaerobic) {
-            cheapestAnaerobicId = workout_options.at(i).getId();
-            minPriceAnaerobic = workout_options.at(i).getPrice();
-            foundAnaerobic = true;
-        }
         if (workout_options.at(i).getType() == MIXED) {
-            if (workout_options.at(i).getPrice() < minPriceAnaerobic) {
+            if (!foundAnaerobic) {
+                cheapestAnaerobicId = workout_options.at(i).getId();
+                minPriceAnaerobic = workout_options.at(i).getPrice();
+                foundAnaerobic = true;
+            }
+            else if (workout_options.at(i).getPrice() < minPriceAnaerobic) {
                 cheapestAnaerobicId = workout_options.at(i).getId();
                 minPriceAnaerobic = workout_options.at(i).getPrice();
             }
         }
 
     }
-    workoutsOrdered.push_back(cheapestCardioId);
-    workoutsOrdered.push_back(expensiveMixId);
-    workoutsOrdered.push_back(cheapestAnaerobicId);
+    if (foundCardio){
+        workoutsOrdered.push_back(cheapestCardioId);
+    }
+    if (foundMix){
+        workoutsOrdered.push_back(expensiveMixId);
+    }
+    if (foundAnaerobic){
+        workoutsOrdered.push_back(cheapestAnaerobicId);
+    }
     return workoutsOrdered;
 }
 
