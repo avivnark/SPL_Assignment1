@@ -114,6 +114,7 @@ void Studio::start() {
             auto *closeAll = new CloseAll();
             closeAll->act(*this);
             open = false;
+            actionsLog.push_back(closeAll);
             break;
         } else if (command == "open") {
             int trainerId = stoi(args[0]);
