@@ -110,7 +110,7 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout> &workout_opt
     int expensiveMixId, maxPriceMix;
     bool foundCardio, foundMix, foundAnaerobic;
     foundCardio = foundMix = foundAnaerobic = false;
-    for (int i = 1; i < workout_options.size(); i++) {
+    for (int i = 0; i < workout_options.size(); i++) {
         if (workout_options.at(i).getType() == CARDIO) {
             if (!foundCardio) {
                 cheapestCardioId = workout_options.at(i).getId();
@@ -131,7 +131,7 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout> &workout_opt
                 maxPriceMix = workout_options.at(i).getPrice();
             }
         }
-        if (workout_options.at(i).getType() == MIXED) {
+        if (workout_options.at(i).getType() == ANAEROBIC) {
             if (!foundAnaerobic) {
                 cheapestAnaerobicId = workout_options.at(i).getId();
                 minPriceAnaerobic = workout_options.at(i).getPrice();

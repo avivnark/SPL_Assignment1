@@ -120,6 +120,7 @@ void Order::act(Studio &studio) {
         std::vector<int> customerWorkoutOrders = customer->order(studio.getWorkoutOptions());
         trainer->order(customer->getId(), customerWorkoutOrders, studio.getWorkoutOptions());
     }
+    // #TODO print "Bob Is Doing Yoga" for example. here or at trainer or at customer.
     complete();
 }
 
