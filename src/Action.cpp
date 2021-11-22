@@ -19,7 +19,7 @@ void BaseAction::complete() {
 void BaseAction::error(std::string errorMsg) {
     status = ERROR;
     this->errorMsg = "Error: " + errorMsg;
-    std::cout << errorMsg << std::endl;
+    std::cout << this->errorMsg << std::endl;
 }
 
 //void BaseAction::logger(string & command, vector<string>& *arguments){
@@ -113,14 +113,13 @@ Order::Order(int id) : BaseAction(), trainerId(id) {
 void Order::act(Studio &studio) {
     Trainer *trainer = studio.getTrainer(trainerId);
     if (trainer == nullptr || !trainer->isOpen()) {
-        this->error("Trainer doesn't exist or is not open");
+        this->error("Trainer does not exist or is not open");
         return;
     }
     for (auto *customer: trainer->getCustomers()) {
         std::vector<int> customerWorkoutOrders = customer->order(studio.getWorkoutOptions());
         trainer->order(customer->getId(), customerWorkoutOrders, studio.getWorkoutOptions());
     }
-    // #TODO print "Bob Is Doing Yoga" for example. here or at trainer or at customer.
     complete();
 }
 
@@ -147,6 +146,10 @@ MoveCustomer::MoveCustomer(int src, int dst, int customerId)
 void MoveCustomer::act(Studio &studio) {
     Trainer *src = studio.getTrainer(srcTrainer);
     Trainer *dst = studio.getTrainer(dstTrainer);
+    if (src->getCustomer(id) == nullptr){
+        error("Cannot move customer");
+        return;
+    }
     if (src == nullptr || dst == nullptr) {
         error("Cannot move customer");
         return;
@@ -159,9 +162,15 @@ void MoveCustomer::act(Studio &studio) {
         error("Cannot move customer");
         return;
     }
+    // move customer from source trainer to destination trainer
     dst->addCustomer(src->getCustomer(id));
-    //TODO: implement here moving orders from origin to destination trainer
+    for (auto orderPair: src->getOrders()) {
+        if (orderPair.first == id){
+            dst->addOrder(orderPair);
+        }
+    }
     src->removeCustomer(id);
+
     if (src->getNumberOfCustomers() == 0) {
         auto *closeTrainer = new Close(srcTrainer);
         closeTrainer->act(studio);
@@ -191,7 +200,7 @@ Close::Close(int id) : BaseAction(), trainerId(id) {
 void Close::act(Studio &studio) {
     Trainer *t = studio.getTrainer(trainerId);
     if (t == nullptr || !t->isOpen()) {
-        this->error("Trainer doesn't exist or is not open");
+        this->error("Trainer does not exist or is not open");
         return;
     }
     int salary = t->getSalary();

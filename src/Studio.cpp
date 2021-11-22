@@ -11,9 +11,9 @@ Studio::Studio() {
     sequentialCustomerId = 0;
 }
 
-Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(other.sequentialCustomerId) {
-    workout_options.reserve(other.workout_options.size());
-    workout_options.assign(other.workout_options.begin(), other.workout_options.end());
+Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(other.sequentialCustomerId), workout_options(other.workout_options) { // Copy constructor
+//    workout_options.reserve(other.workout_options.size());
+//    workout_options.assign(other.workout_options.begin(), other.workout_options.end());
 
     trainers.reserve(other.trainers.size());
     actionsLog.reserve(other.actionsLog.size());
@@ -27,7 +27,7 @@ Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(oth
 }
 
 
-Studio::~Studio() {
+Studio::~Studio() { // Destructor
     for (auto *trainer: trainers) {
         delete trainer;
     }
@@ -39,9 +39,6 @@ Studio::~Studio() {
     actionsLog.clear();
 }
 
-Studio::Studio(Studio &&other) {
-
-}
 
 Studio &Studio::operator=(const Studio &other) { // copy assignment operator
     if (this != &other) {
@@ -59,7 +56,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
         actionsLog.clear();
 
         //copy new studio into this
-        workout_options.assign(other.workout_options.begin(), other.workout_options.end());
+//        workout_options.assign(other.workout_options.begin(), other.workout_options.end());
         for (auto *trainer: other.trainers) {
             trainers.push_back(new Trainer(*trainer));
         }
@@ -70,7 +67,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
     return *this;
 }
 
-Studio &Studio::operator=(Studio &&other) {
+Studio &Studio::operator=(Studio &&other) { // move assignment operator
     trainers = std::move(other.trainers);
     actionsLog = std::move(other.actionsLog);
     return *this;
@@ -81,10 +78,14 @@ Studio::Studio(const string &configFilePath) {
     sequentialCustomerId = 0;
     string line;
     ifstream MyReadFile(configFilePath);
-    getline(MyReadFile, line);
+    do{
+        getline(MyReadFile, line);
+    } while (line[0] == '\0' || line[0] == '#');
     int numOfTrainers = readNumOfTrainers(line);
     trainers.reserve(numOfTrainers);
-    getline(MyReadFile, line);
+    do{
+        getline(MyReadFile, line);
+    } while (line[0] == '\0' || line[0] == '#');
     createNewTrainers(line);
     int w_id = 0;
     while (getline(MyReadFile, line)) {
@@ -242,28 +243,12 @@ bool Studio::extractCommand(const string &user_input, string &command, vector<st
     end_sep = user_input.find(' ', start_sep);
     while (start_sep != 0) {
         string arg = user_input.substr(start_sep, end_sep - start_sep);
-        if (raiseOnInvalidArgument(arg)) {
-            return false;
-        }
         args.push_back(arg);
         start_sep = end_sep + 1;
         end_sep = user_input.find(' ', start_sep);
     }
     return true;
 
-}
-
-bool Studio::raiseOnInvalidArgument(string &arg) {
-    if (arg.empty()) {
-        return printInvalidArgumentError();
-    }
-    // #TODO add more validation checks
-    return false;
-}
-
-bool Studio::printInvalidArgumentError() {
-    cout << "Invalid Arguments, please insert command again" << endl;
-    return true;
 }
 
 void Studio::createCustomers(vector<string> &args, vector<Customer *> &customerList) {

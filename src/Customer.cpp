@@ -83,10 +83,10 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout> &workout_
         if (workout_option.getType() == ANAEROBIC)
             workoutsOrdered.push_back(workout_option.getId());
     }
-    std::sort(workoutsOrdered.begin(), workoutsOrdered.end(),
+    sort(workoutsOrdered.begin(), workoutsOrdered.end(),
               [&workout_options](int id1, int id2) -> bool {
                   return workout_options.at(id1).getPrice() -
-                         workout_options.at(id2).getPrice(); // #TODO check if that order is descending
+                         workout_options.at(id2).getPrice();
               });
     return workoutsOrdered;
 }

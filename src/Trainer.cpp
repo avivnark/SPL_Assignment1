@@ -9,6 +9,7 @@
 
 Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
     salary = 0;
+    open = false;
 }
 
 Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open) {
@@ -71,8 +72,6 @@ void Trainer::addCustomer(Customer *customer) {
 }
 
 void Trainer::removeCustomer(int id) {
-    Customer *customerToDelete = getCustomer(id);
-//    delete customerToDelete;
     int position = 0;
     for (auto *customer: customersList) {
         if (customer->getId() == id) {
@@ -82,6 +81,14 @@ void Trainer::removeCustomer(int id) {
         position++;
     }
     customersList.erase(customersList.begin() + position);
+    vector<OrderPair > updatedOrderList;
+    for (auto orderPair: orderList) {
+        if (orderPair.first != id){
+            updatedOrderList.push_back(orderPair);
+        }
+    }
+    orderList = std::move(updatedOrderList);
+
 }
 
 Customer *Trainer::getCustomer(int id) {
@@ -111,11 +118,16 @@ void Trainer::closeTrainer() {
     }
     customersList.clear();
     orderList.clear();
+    salary += getSalary();
     open = false;
 }
 
 int Trainer::getSalary() {
-    return salary;
+    int currentSalary = 0;
+    for (auto orderPair: orderList) {
+        currentSalary += orderPair.second.getPrice();
+    }
+    return salary + currentSalary;
 }
 
 bool Trainer::isOpen() {
@@ -128,7 +140,8 @@ void Trainer::order(const int customer_id, const std::vector<int> workout_ids, c
     for (int w_id: workout_ids) {
         OrderPair orderPair(customer_id, workout_options[w_id]);
         orderList.push_back(orderPair);
-        salary += orderPair.second.getPrice();
+        Customer * customer = getCustomer(customer_id);
+        cout << customer->getName() + " Is Doing " + workout_options[w_id].getName() + "\n";
     }
 }
 
@@ -136,4 +149,7 @@ unsigned long Trainer::getNumberOfCustomers() {
     return customersList.size();
 }
 
+void Trainer::addOrder(OrderPair orderPair) {
+    orderList.push_back(orderPair);
+}
 
