@@ -66,7 +66,7 @@ int Trainer::getCapacity() const {
 }
 
 void Trainer::addCustomer(Customer *customer) {
-    customersList.push_back(customer);
+    customersList.push_back(customer->clone());
 }
 
 void Trainer::removeCustomer(int id) {
