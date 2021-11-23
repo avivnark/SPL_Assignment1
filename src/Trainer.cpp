@@ -77,7 +77,7 @@ void Trainer::removeCustomer(int id) {
             delete customer;
             break;
         }
-        customersList.pop_back();
+        position++;
     }
     customersList.erase(customersList.begin() + position);
     vector<OrderPair > updatedOrderList;
