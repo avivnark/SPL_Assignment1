@@ -64,7 +64,7 @@ void OpenTrainer::act(Studio &studio) {
     }
     t->openTrainer();
     for (auto *customer: customers) {
-        t->addCustomer(customer->clone());
+        t->addCustomer(customer);
     }
     complete();
 }

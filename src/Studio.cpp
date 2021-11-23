@@ -133,6 +133,7 @@ void Studio::start() {
             auto *openTrainer = new OpenTrainer(trainerId, customerList);
             openTrainer->act(*this);
             customerList.clear();
+//            clearCreatedCustomers(customerList);
             actionsLog.push_back(openTrainer);
         } else if (command == "close") {
             int trainerId = stoi(args[0]);
@@ -293,4 +294,12 @@ void Studio::clearStudioResources() {
     }
     trainers.clear();
     actionsLog.clear();
+}
+
+void Studio::clearCreatedCustomers(vector<Customer *> &customerList) {
+    for(auto * customer: customerList){
+        delete customer;
+    }
+    customerList.clear();
+
 }
