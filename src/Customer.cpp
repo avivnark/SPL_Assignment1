@@ -78,18 +78,31 @@ HeavyMuscleCustomer::HeavyMuscleCustomer(string name, int id) : Customer(name, i
 
 
 std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout> &workout_options) {
-    vector<int> workoutsOrdered;
-    for (const auto &workout_option: workout_options) {
+    vector<Workout> workoutsOrdered;
+    vector<int> output;
+    for (const auto & workout_option : workout_options) {
         if (workout_option.getType() == ANAEROBIC)
-            workoutsOrdered.push_back(workout_option.getId());
+            workoutsOrdered.push_back(workout_option);
     }
-    sort(workoutsOrdered.begin(), workoutsOrdered.end(),
-              [&workout_options](int id1, int id2) -> bool {
-                  return workout_options.at(id1).getPrice() -
-                         workout_options.at(id2).getPrice();
-              });
-    return workoutsOrdered;
+    int i, j;
+    for (int i = 1; i < workoutsOrdered.size(); i++)
+    {
+        Workout key = workoutsOrdered[i];
+        j = i - 1;
+        while (j >= 0 && workoutsOrdered[j].getPrice() < key.getPrice())
+        {
+            workoutsOrdered[j + 1] = workoutsOrdered[j];
+            j--;
+        }
+        workoutsOrdered[j + 1] = key;
+    }
+    for (int s=workoutsOrdered.size()-1; s>=0; s--) {
+        output.push_back(workoutsOrdered.at(s).getId());
+    }
+    return output;
+
 }
+
 
 string HeavyMuscleCustomer::toString() const {
     return getName() + ",mcl";
@@ -141,7 +154,6 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout> &workout_opt
                 minPriceAnaerobic = workout_options.at(i).getPrice();
             }
         }
-
     }
     if (foundCardio) {
         workoutsOrdered.push_back(cheapestCardioId);

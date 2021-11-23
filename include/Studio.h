@@ -11,11 +11,11 @@
 class Studio{
 public:
 	Studio();
-    Studio(const Studio& other);
-    ~Studio();
-    Studio(Studio && other);
-    Studio& operator=(const Studio & other);
-    Studio& operator=(Studio && other);
+    Studio(const Studio& other);//Copy
+    ~Studio();//Destructor
+    Studio(Studio && other);//Move
+    Studio& operator=(const Studio & other);//Copy assignment
+    Studio& operator=(Studio && other);//Move assignment
     Studio(const std::string &configFilePath);
     void start();
     int getNumOfTrainers() const;

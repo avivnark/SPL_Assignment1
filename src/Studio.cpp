@@ -273,6 +273,9 @@ void Studio::createCustomers(vector<string> &args, vector<Customer *> &customerL
         } else if (strategy == "fbd") {
             customerList.push_back(new FullBodyCustomer(name, sequentialCustomerId));
         }
+        else{
+
+        }
         sequentialCustomerId++;
     }
 }

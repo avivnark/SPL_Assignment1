@@ -1,9 +1,7 @@
 #include "../include/Studio.h"
 #include "../include/Trainer.h"
 
-Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
-    salary = 0;
-    open = false;
+Trainer::Trainer(int t_capacity) : capacity(t_capacity), salary(0), open(false){
 }
 // #TODO reduce duplicate code in rule of five, use functions to clear
 Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open), orderList(other.orderList) {
@@ -72,13 +70,14 @@ void Trainer::addCustomer(Customer *customer) {
 }
 
 void Trainer::removeCustomer(int id) {
+
     int position = 0;
     for (auto *customer: customersList) {
         if (customer->getId() == id) {
             delete customer;
             break;
         }
-        position++;
+        customersList.pop_back();
     }
     customersList.erase(customersList.begin() + position);
     vector<OrderPair > updatedOrderList;
@@ -88,7 +87,6 @@ void Trainer::removeCustomer(int id) {
         }
     }
     orderList = std::move(updatedOrderList);
-
 }
 
 Customer *Trainer::getCustomer(int id) {
