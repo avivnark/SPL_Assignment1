@@ -28,6 +28,7 @@ public:
     bool isOpen();
 
     unsigned long getNumberOfCustomers();
+    void addOrder(OrderPair orderPair);
 private:
     int capacity;
     bool open;

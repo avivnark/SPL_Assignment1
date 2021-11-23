@@ -1,45 +1,28 @@
 #include "../include/Studio.h"
 #include "../include/Trainer.h"
 
-//  int capacity;
-//    bool open;
-//    int salary;
-//    std::vector<Customer*> customersList;
-//    std::vector<OrderPair> orderList;
-
 Trainer::Trainer(int t_capacity) : capacity(t_capacity), salary(0), open(false){
 }
-
-Trainer::Trainer(const Trainer &other): capacity(other.capacity), salary(other.salary), open(other.open){
+// #TODO reduce duplicate code in rule of five, use functions to clear
+Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open), orderList(other.orderList) {
     customersList.reserve(other.customersList.size());
-    for (auto * customer: other.customersList) {
-        customersList.push_back(customer);
-    }
-    orderList.reserve(other.orderList.size());
-    for (auto pair: other.orderList) {
-        orderList.push_back(pair);
+    for (auto *customer: other.customersList) {
+        customersList.push_back(customer->clone());
     }
 }
 
-Trainer::Trainer(Trainer &&other): capacity(other.capacity), salary(other.salary), open(other.open) {
-    for (auto *customer: customersList) { // could possibly cause concurrent issues, should think about it
+Trainer::Trainer(Trainer &&other) : capacity(other.capacity), salary(other.salary), open(other.open) { // move constructor
+    for (auto *customer: customersList) {
         delete customer;
-        customer = nullptr;
     }
     customersList.clear();
-    for (auto pair: orderList) { // could possibly cause concurrent issues, should think about it
-        delete &pair;
-        //pair = nullptr;
-    }
     orderList.clear();
+
     customersList.reserve(other.customersList.size());
-    for (auto * customer: other.customersList) {
+    for (auto *customer: other.customersList) {
         customersList.push_back(customer);
     }
-    orderList.reserve(other.orderList.size());
-    for (auto pair: other.orderList) {
-        orderList.push_back(pair);
-    }
+    other.customersList.clear();
 }
 
 Trainer::~Trainer() {
@@ -50,13 +33,31 @@ Trainer::~Trainer() {
     orderList.clear();
 }
 
-Trainer &Trainer::operator=(const Trainer &other) {
+Trainer &Trainer::operator=(const Trainer &other) { // copy assignment operator
+    for (auto * customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
 
-
+    customersList.reserve(other.customersList.size());
+    for (auto * customer: other.customersList) {
+        customersList.push_back(customer->clone());
+    }
+    return *this;
 }
 
 Trainer &Trainer::operator=(Trainer &&other) {
-    customersList = std::move(other.customersList);
+    for (auto * customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
+
+    customersList.reserve(other.customersList.size());
+    for (auto * otherCustomer: other.customersList) {
+        customersList.push_back(otherCustomer);
+    }
+    other.customersList.clear();
+    return *this;
 }
 
 int Trainer::getCapacity() const {
@@ -69,25 +70,23 @@ void Trainer::addCustomer(Customer *customer) {
 }
 
 void Trainer::removeCustomer(int id) {
-    std::vector<Customer*> newCustomersList;
-    while (!customersList.empty()){
-        if (customersList.back()->getId() != id){
-            newCustomersList.push_back(customersList.back());
+
+    int position = 0;
+    for (auto *customer: customersList) {
+        if (customer->getId() == id) {
+            delete customer;
+            break;
         }
         customersList.pop_back();
     }
-    customersList=newCustomersList;
-//    Customer *customerToDelete = getCustomer(id);
-//    delete customerToDelete;
-//    int position = 0;
-//    for (auto *customer: customersList) {
-//        if (customer->getId() == id) {
-//            delete customer;
-//            break;
-//        }
-//        position++;
-//    }
-//    customersList.erase(customersList.begin() + position);
+    customersList.erase(customersList.begin() + position);
+    vector<OrderPair > updatedOrderList;
+    for (auto orderPair: orderList) {
+        if (orderPair.first != id){
+            updatedOrderList.push_back(orderPair);
+        }
+    }
+    orderList = std::move(updatedOrderList);
 }
 
 Customer *Trainer::getCustomer(int id) {
@@ -112,16 +111,21 @@ void Trainer::openTrainer() {
 }
 
 void Trainer::closeTrainer() {
-    for (auto * customer: customersList) {
+    for (auto *customer: customersList) {
         delete customer;
     }
     customersList.clear();
     orderList.clear();
+    salary += getSalary();
     open = false;
 }
 
 int Trainer::getSalary() {
-    return salary;
+    int currentSalary = 0;
+    for (auto orderPair: orderList) {
+        currentSalary += orderPair.second.getPrice();
+    }
+    return salary + currentSalary;
 }
 
 bool Trainer::isOpen() {
@@ -134,7 +138,8 @@ void Trainer::order(const int customer_id, const std::vector<int> workout_ids, c
     for (int w_id: workout_ids) {
         OrderPair orderPair(customer_id, workout_options[w_id]);
         orderList.push_back(orderPair);
-        salary += orderPair.second.getPrice();
+        Customer * customer = getCustomer(customer_id);
+        cout << customer->getName() + " Is Doing " + workout_options[w_id].getName() + "\n";
     }
 }
 
@@ -142,4 +147,7 @@ unsigned long Trainer::getNumberOfCustomers() {
     return customersList.size();
 }
 
+void Trainer::addOrder(OrderPair orderPair) {
+    orderList.push_back(orderPair);
+}
 
