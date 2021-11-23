@@ -12,9 +12,6 @@ Studio::Studio() {
 }
 
 Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(other.sequentialCustomerId), workout_options(other.workout_options) { // Copy constructor
-//    workout_options.reserve(other.workout_options.size());
-//    workout_options.assign(other.workout_options.begin(), other.workout_options.end());
-
     trainers.reserve(other.trainers.size());
     actionsLog.reserve(other.actionsLog.size());
 

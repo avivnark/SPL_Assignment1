@@ -1,114 +1,36 @@
 /Users/ronlevi/CLionProjects/SPL_Assignment1/cmake-build-debug/SPL_Assignment1 /Users/ronlevi/CLionProjects/SPL_Assignment1/src/ExampleInput.txt
 Studio is now Open!
-open 2 ron,mcl aviv,fbd rubin,chp
+open 2 ron,mcl aviv,fbd
+open 3 Shuli,chp
 order 2
-ron Is Doing Pilates
-ron Is Doing Yoga
-aviv Is Doing Rope Jumps
-aviv Is Doing CrossFit
-aviv Is Doing Yoga
-rubin Is Doing Rope Jumps
-open 3 yog,swt
+- ron Is Doing Pilates
+- ron Is Doing Yoga
+- aviv Is Doing Rope Jumps
+- aviv Is Doing CrossFit
+- aviv Is Doing Yoga
 order 3
-yog Is Doing Zumba
-yog Is Doing Rope Jumps
-log
-open 2 ron,mcl aviv,fbd rubin,chp Completed
-order 2 Completed
-open 3 yog,swt Completed
-order 3 Completed
-backup Completed
-status 2
-Trainer 2 status: open
-Customers:
-0 ron
-1 aviv
-2 rubin
-Orders:
-Pilates 110NIS 0
-Yoga 90NIS 0
-Rope Jumps 70NIS 1
-CrossFit 140NIS 1
-Yoga 90NIS 1
-Rope Jumps 70NIS 2
-Current Trainer's Salary: 570NIS
-status 3
-Trainer 3 status: open
-Customers:
-3 yog
-Orders:
-Zumba 100NIS 3
-Rope Jumps 70NIS 3
-Current Trainer's Salary: 170NIS
+- Shuli Is Doing Rope Jumps
+backup
 move 2 3 1
-status 2
-Trainer 2 status: open
-Customers:
-0 ron
-2 rubin
-Orders:
-Pilates 110NIS 0
-Yoga 90NIS 0
-Rope Jumps 70NIS 2
-Current Trainer's Salary: 270NIS
-status 3
-Trainer 3 status: open
-Customers:
-3 yog
-1 aviv
-Orders:
-Zumba 100NIS 3
-Rope Jumps 70NIS 3
-Rope Jumps 70NIS 1
-CrossFit 140NIS 1
-Yoga 90NIS 1
-Current Trainer's Salary: 470NIS
-log
-open 2 ron,mcl aviv,fbd rubin,chp Completed
-order 2 Completed
-open 3 yog,swt Completed
-order 3 Completed
-backup Completed
-log
-status 2 Completed
-status 3 Completed
-move 2 3 1 Completed
-status 2 Completed
-status 3 Completed
 restore
 status 2
-Trainer 2 status: open
-Customers:
-0 ron
-1
-2 rubin
-Orders:
-Pilates 110NIS 0
-Yoga 90NIS 0
-Rope Jumps 70NIS 1
-CrossFit 140NIS 1
-Yoga 90NIS 1
-Rope Jumps 70NIS 2
-Current Trainer's Salary: 570NIS
+- Trainer 2 status: open
+- Customers:
+- 0 ron
+- 1
+- Orders:
+- Pilates 110NIS 0
+- Yoga 90NIS 0
+- Rope Jumps 70NIS 1
+- CrossFit 140NIS 1
+- Yoga 90NIS 1
+- Current Trainer's Salary: 500NIS
 status 3
-Trainer 3 status: open
-Customers:
-3 yog
-Orders:
-Zumba 100NIS 3
-Rope Jumps 70NIS 3
-Current Trainer's Salary: 170NIS
-log
-open 2 ron,mcl aviv,fbd rubin,chp Completed
-order 2
-open 3 yog,swt Completed
-order 3 Completed
-restore Completed
-status 2 Completed
-status 3 Completed
+- Trainer 3 status: open
+- Customers:
+- 2 Shuli
+- Orders:
+- Rope Jumps 70NIS 2
+- Current Trainer's Salary: 70NIS
 closeall
 Exception: EXC_BAD_ACCESS (code=1, address=0x4)
-Exception: EXC_BAD_ACCESS (code=1, address=0x4) // pointed at Trainer::isOpen method. updated open=false on constructor.
-// need to check if it fixed the problem.
-
-Process finished with exit code 9

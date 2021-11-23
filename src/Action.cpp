@@ -146,11 +146,11 @@ MoveCustomer::MoveCustomer(int src, int dst, int customerId)
 void MoveCustomer::act(Studio &studio) {
     Trainer *src = studio.getTrainer(srcTrainer);
     Trainer *dst = studio.getTrainer(dstTrainer);
-    if (src->getCustomer(id) == nullptr){
+    if (src == nullptr || dst == nullptr) {
         error("Cannot move customer");
         return;
     }
-    if (src == nullptr || dst == nullptr) {
+    if (src->getCustomer(id) == nullptr){
         error("Cannot move customer");
         return;
     }

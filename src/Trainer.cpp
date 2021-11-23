@@ -1,12 +1,6 @@
 #include "../include/Studio.h"
 #include "../include/Trainer.h"
 
-//  int capacity;
-//    bool open;
-//    int salary;
-//    std::vector<Customer*> customersList;
-//    std::vector<OrderPair> orderList;
-
 Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
     salary = 0;
     open = false;
@@ -15,7 +9,7 @@ Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
 Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open) {
     customersList.reserve(other.customersList.size());
     for (auto *customer: other.customersList) {
-        customersList.push_back(customer);
+        customersList.push_back(customer->clone());
     }
     orderList.reserve(other.orderList.size());
     for (auto pair: other.orderList) {
