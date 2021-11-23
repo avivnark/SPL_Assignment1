@@ -7,8 +7,7 @@
 //    std::vector<Customer*> customersList;
 //    std::vector<OrderPair> orderList;
 
-Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
-    salary = 0;
+Trainer::Trainer(int t_capacity) : capacity(t_capacity), salary(0), open(false){
 }
 
 Trainer::Trainer(const Trainer &other): capacity(other.capacity), salary(other.salary), open(other.open){
@@ -70,17 +69,25 @@ void Trainer::addCustomer(Customer *customer) {
 }
 
 void Trainer::removeCustomer(int id) {
-    Customer *customerToDelete = getCustomer(id);
-//    delete customerToDelete;
-    int position = 0;
-    for (auto *customer: customersList) {
-        if (customer->getId() == id) {
-            delete customer;
-            break;
+    std::vector<Customer*> newCustomersList;
+    while (!customersList.empty()){
+        if (customersList.back()->getId() != id){
+            newCustomersList.push_back(customersList.back());
         }
-        position++;
+        customersList.pop_back();
     }
-    customersList.erase(customersList.begin() + position);
+    customersList=newCustomersList;
+//    Customer *customerToDelete = getCustomer(id);
+//    delete customerToDelete;
+//    int position = 0;
+//    for (auto *customer: customersList) {
+//        if (customer->getId() == id) {
+//            delete customer;
+//            break;
+//        }
+//        position++;
+//    }
+//    customersList.erase(customersList.begin() + position);
 }
 
 Customer *Trainer::getCustomer(int id) {
