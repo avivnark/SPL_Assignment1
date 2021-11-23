@@ -1,5 +1,6 @@
 #include "../include/Studio.h"
 #include "../include/Customer.h"
+#include "algorithm"
 
 
 using namespace std;
