@@ -25,28 +25,12 @@ Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(oth
 
 
 Studio::~Studio() { // Destructor
-    for (auto *trainer: trainers) {
-        delete trainer;
-    }
-    for (auto *baseAction: actionsLog) {
-        delete baseAction;
-    }
-    workout_options.clear();
-    trainers.clear();
-    actionsLog.clear();
+    clearStudioResources();
 }
 
 
 Studio::Studio(Studio &&other) { // move constructor
-    // delete current resources
-    for (auto * trainer: trainers)  {
-        delete trainer;
-    }
-    for (auto * baseAction: actionsLog) {
-        delete baseAction;
-    }
-    trainers.clear();
-    actionsLog.clear();
+    clearStudioResources();
 
     //move resources from other
     for (auto * trainer: other.trainers) {
@@ -65,16 +49,11 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
     if (this != &other) {
         open = other.open;
         sequentialCustomerId = other.sequentialCustomerId;
+
+
         // clear current resources:
+        clearStudioResources();
         workout_options.clear();
-        for (auto *trainer: trainers) {
-            delete trainer;
-        }
-        for (auto *baseAction: actionsLog) {
-            delete baseAction;
-        }
-        trainers.clear();
-        actionsLog.clear();
 
         //copy new studio into this
 //        workout_options.assign(other.workout_options.begin(), other.workout_options.end());
@@ -84,13 +63,21 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
         for (auto *baseAction: other.actionsLog) {
             actionsLog.push_back(baseAction->clone());
         }
+        for (auto workout: other.workout_options) {
+            workout_options.emplace_back(Workout(workout));
+        }
     }
     return *this;
 }
 
 Studio &Studio::operator=(Studio &&other) { // move assignment operator
-    trainers = std::move(other.trainers);
-    actionsLog = std::move(other.actionsLog);
+    if (this != &other){
+        trainers = std::move(other.trainers);
+        actionsLog = std::move(other.actionsLog);
+        for (auto workout: other.workout_options) {
+            workout_options.emplace_back(Workout(workout));
+        }
+    }
     return *this;
 }
 
@@ -295,4 +282,15 @@ void Studio::splitNameStrategy(string &customerString, string &name, string &str
     int comma = customerString.find(',');
     name = customerString.substr(0, comma);
     strategy = customerString.substr(comma + 1);
+}
+
+void Studio::clearStudioResources() {
+    for (auto *trainer: trainers) {
+        delete trainer;
+    }
+    for (auto *baseAction: actionsLog) {
+        delete baseAction;
+    }
+    trainers.clear();
+    actionsLog.clear();
 }
