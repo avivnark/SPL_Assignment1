@@ -37,6 +37,30 @@ Studio::~Studio() { // Destructor
 }
 
 
+Studio::Studio(Studio &&other) { // move constructor
+    // delete current resources
+    for (auto * trainer: trainers)  {
+        delete trainer;
+    }
+    for (auto * baseAction: actionsLog) {
+        delete baseAction;
+    }
+    trainers.clear();
+    actionsLog.clear();
+
+    //move resources from other
+    for (auto * trainer: other.trainers) {
+        trainers.push_back(trainer);
+    }
+    for (auto * baseAction: other.actionsLog) {
+        actionsLog.push_back(baseAction);
+    }
+
+    //delete other pointers
+    other.trainers.clear();
+    other.actionsLog.clear();
+}
+
 Studio &Studio::operator=(const Studio &other) { // copy assignment operator
     if (this != &other) {
         open = other.open;

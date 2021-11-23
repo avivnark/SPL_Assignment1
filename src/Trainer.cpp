@@ -5,37 +5,26 @@ Trainer::Trainer(int t_capacity) : capacity(t_capacity) {
     salary = 0;
     open = false;
 }
-
-Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open) {
+// #TODO reduce duplicate code in rule of five, use functions to clear
+Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open), orderList(other.orderList) {
     customersList.reserve(other.customersList.size());
     for (auto *customer: other.customersList) {
         customersList.push_back(customer->clone());
     }
-    orderList.reserve(other.orderList.size());
-    for (auto pair: other.orderList) {
-        orderList.push_back(pair);
-    }
 }
 
-Trainer::Trainer(Trainer &&other) : capacity(other.capacity), salary(other.salary), open(other.open) {
-    for (auto *customer: customersList) { // could possibly cause concurrent issues, should think about it
+Trainer::Trainer(Trainer &&other) : capacity(other.capacity), salary(other.salary), open(other.open) { // move constructor
+    for (auto *customer: customersList) {
         delete customer;
-        customer = nullptr;
     }
     customersList.clear();
-    for (auto pair: orderList) { // could possibly cause concurrent issues, should think about it
-        delete &pair;
-        //pair = nullptr;
-    }
     orderList.clear();
+
     customersList.reserve(other.customersList.size());
     for (auto *customer: other.customersList) {
         customersList.push_back(customer);
     }
-    orderList.reserve(other.orderList.size());
-    for (auto pair: other.orderList) {
-        orderList.push_back(pair);
-    }
+    other.customersList.clear();
 }
 
 Trainer::~Trainer() {
@@ -46,13 +35,30 @@ Trainer::~Trainer() {
     orderList.clear();
 }
 
-Trainer &Trainer::operator=(const Trainer &other) {
-    return *this;
+Trainer &Trainer::operator=(const Trainer &other) { // copy assignment operator
+    for (auto * customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
 
+    customersList.reserve(other.customersList.size());
+    for (auto * customer: other.customersList) {
+        customersList.push_back(customer->clone());
+    }
+    return *this;
 }
 
 Trainer &Trainer::operator=(Trainer &&other) {
-    customersList = std::move(other.customersList);
+    for (auto * customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
+
+    customersList.reserve(other.customersList.size());
+    for (auto * otherCustomer: other.customersList) {
+        customersList.push_back(otherCustomer);
+    }
+    other.customersList.clear();
     return *this;
 }
 
