@@ -161,7 +161,7 @@ void MoveCustomer::act(Studio &studio) {
         return;
     }
     // move customer from source trainer to destination trainer
-    dst->addCustomer(src->getCustomer(id));
+    dst->addCustomer(src->getCustomer(id)->clone());
     for (auto orderPair: src->getOrders()) {
         if (orderPair.first == id){
             dst->addOrder(orderPair);
@@ -352,7 +352,7 @@ void RestoreStudio::act(Studio &studio) {
         return;
     }
     studio = *backup; //copy assignment called
-    complete(); // #TODO check
+    complete();
 }
 
 std::string RestoreStudio::toString() const {

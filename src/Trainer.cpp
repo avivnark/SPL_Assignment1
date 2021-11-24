@@ -74,7 +74,7 @@ void Trainer::removeCustomer(int id) {
     int position = 0;
     for (auto *customer: customersList) {
         if (customer->getId() == id) {
-            delete customer; // #TODO probably deletes the customer also from the destination vector
+            delete customer;
             break;
         }
         position++;
@@ -111,11 +111,6 @@ void Trainer::openTrainer() {
 }
 
 void Trainer::closeTrainer() {
-//    for (auto *customer: customersList) {
-//        delete customer;
-//    }
-//    customersList.clear();
-//    orderList.clear();
     salary += getSalary();
     open = false;
 }
