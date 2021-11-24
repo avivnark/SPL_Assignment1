@@ -232,6 +232,7 @@ void CloseAll::act(Studio &studio) {
         if (trainer->isOpen()) {
             Close *closeTrainer = new Close(i);
             closeTrainer->act(studio);
+            delete closeTrainer;
         }
         complete();
     }
