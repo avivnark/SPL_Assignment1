@@ -15,11 +15,7 @@ Trainer::Trainer(const Trainer &other) : capacity(other.capacity), open(other.op
 
 Trainer::Trainer(Trainer &&other) : capacity(other.capacity), open(other.open),
                                     salary(other.salary) { // move constructor
-    for (auto *customer: customersList) {
-        delete customer;
-    }
-    customersList.clear();
-    orderList.clear();
+    clearTrainerResources();
 
     customersList.reserve(other.customersList.size());
     for (auto *customer: other.customersList) {
@@ -29,35 +25,31 @@ Trainer::Trainer(Trainer &&other) : capacity(other.capacity), open(other.open),
 }
 
 Trainer::~Trainer() { // destructor
-    for (auto *customer: customersList) {
-        delete customer;
-    }
-    customersList.clear();
-    orderList.clear();
+    clearTrainerResources();
 }
 
 Trainer &Trainer::operator=(const Trainer &other) { // copy assignment operator
-    for (auto *customer: customersList) {
-        delete customer;
-    }
-    customersList.clear();
+    clearTrainerResources();
 
     customersList.reserve(other.customersList.size());
     for (auto *customer: other.customersList) {
         customersList.push_back(customer->clone());
     }
+    for (const auto& orderPair: other.orderList) {
+        orderList.push_back(orderPair);
+    }
     return *this;
 }
 
 Trainer &Trainer::operator=(Trainer &&other) { // move assignment operator
-    for (auto *customer: customersList) {
-        delete customer;
-    }
-    customersList.clear();
+    clearTrainerResources();
 
     customersList.reserve(other.customersList.size());
     for (auto *otherCustomer: other.customersList) {
         customersList.push_back(otherCustomer);
+    }
+    for (auto orderPair: other.orderList) {
+        orderList.push_back(std::move(orderPair));
     }
     other.customersList.clear();
     return *this;
@@ -145,7 +137,15 @@ unsigned long Trainer::getNumberOfCustomers() {
     return customersList.size();
 }
 
-void Trainer::addOrder(OrderPair orderPair) {
+void Trainer::addOrder(const OrderPair& orderPair) {
     orderList.push_back(orderPair);
+}
+
+void Trainer::clearTrainerResources() {
+    for (auto *customer: customersList) {
+        delete customer;
+    }
+    customersList.clear();
+    orderList.clear();
 }
 

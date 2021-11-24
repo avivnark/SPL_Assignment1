@@ -28,7 +28,8 @@ public:
     bool isOpen();
 
     unsigned long getNumberOfCustomers();
-    void addOrder(OrderPair orderPair);
+    void addOrder(const OrderPair& orderPair);
+    void clearTrainerResources();
 private:
     int capacity;
     bool open;
