@@ -74,7 +74,7 @@ void Trainer::removeCustomer(int id) {
     int position = 0;
     for (auto *customer: customersList) {
         if (customer->getId() == id) {
-            delete customer;
+            delete customer; // #TODO probably deletes the customer also from the destination vector
             break;
         }
         position++;
