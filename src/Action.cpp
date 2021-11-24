@@ -64,7 +64,7 @@ void OpenTrainer::act(Studio &studio) {
     }
     t->openTrainer();
     for (auto *customer: customers) {
-        t->addCustomer(customer->clone());
+        t->addCustomer(customer);
     }
     complete();
 }
@@ -94,9 +94,9 @@ OpenTrainer::OpenTrainer(const OpenTrainer &other) : trainerId(other.trainerId) 
 }
 
 OpenTrainer::~OpenTrainer() {
-    for (auto *customer: customers) {
-        delete customer;
-    }
+//    for (auto *customer: customers) {
+//        delete customer;
+//    }
     customers.clear();
 }
 
