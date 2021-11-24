@@ -4,7 +4,6 @@
 Trainer::Trainer(int t_capacity) : capacity(t_capacity), open(false), salary(0) {
 }
 
-// #TODO reduce duplicate code in rule of five, use functions to clear
 Trainer::Trainer(const Trainer &other) : capacity(other.capacity), open(other.open), salary(other.salary),
                                          orderList(other.orderList) { // copy constructor
     customersList.reserve(other.customersList.size());
@@ -106,16 +105,13 @@ void Trainer::openTrainer() {
 }
 
 void Trainer::closeTrainer() {
-    salary += getSalary();
+    salary += getCurrentSalary();
     open = false;
+    clearTrainerResources();
 }
 
 int Trainer::getSalary() {
-    int currentSalary = 0;
-    for (auto orderPair: orderList) {
-        currentSalary += orderPair.second.getPrice();
-    }
-    return salary + currentSalary;
+    return salary + getCurrentSalary();
 }
 
 bool Trainer::isOpen() {
@@ -147,5 +143,13 @@ void Trainer::clearTrainerResources() {
     }
     customersList.clear();
     orderList.clear();
+}
+
+int Trainer::getCurrentSalary() {
+    int currentSalary = 0;
+    for (auto orderPair: orderList) {
+        currentSalary += orderPair.second.getPrice();
+    }
+    return currentSalary;
 }
 

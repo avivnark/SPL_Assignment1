@@ -200,7 +200,6 @@ void Close::act(Studio &studio) {
     t->closeTrainer();
     std::cout << "Trainer " << trainerId << " closed. Salary " << salary << "NIS" << std::endl;
     complete();
-
 }
 
 std::string Close::toString() const {
@@ -327,6 +326,7 @@ BackupStudio::BackupStudio() : BaseAction() {
 }
 
 void BackupStudio::act(Studio &studio) {
+    delete backup;
     backup = new Studio(studio);
     complete();
 }

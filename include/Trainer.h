@@ -29,13 +29,15 @@ public:
 
     unsigned long getNumberOfCustomers();
     void addOrder(const OrderPair& orderPair);
-    void clearTrainerResources();
 private:
     int capacity;
     bool open;
     int salary;
     std::vector<Customer*> customersList;
     std::vector<OrderPair> orderList; //A list of pairs for each order for the trainer - (customer_id, Workout)
+
+    void clearTrainerResources();
+    int getCurrentSalary();
 };
 
 
