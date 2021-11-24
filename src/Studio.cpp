@@ -73,6 +73,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
 Studio &Studio::operator=(Studio &&other) { // move assignment operator
     if (this != &other){
         clearStudioResources();
+        workout_options.clear();
         trainers = std::move(other.trainers);
         actionsLog = std::move(other.actionsLog);
         for (auto workout: other.workout_options) {
@@ -167,12 +168,12 @@ void Studio::start() {
             actionsLog.push_back(printActionsLog);
         } else if (command == "backup") {
             auto *backupStudio = new BackupStudio();
-            backupStudio->act(*this);
             actionsLog.push_back(backupStudio);
+            backupStudio->act(*this);
         } else if (command == "restore") {
             auto *restoreStudio = new RestoreStudio();
-            restoreStudio->act(*this);
             actionsLog.push_back(restoreStudio);
+            restoreStudio->act(*this);
         } else {
             cout << "Unidentified command, please try again:" << endl;
         }
