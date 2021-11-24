@@ -26,10 +26,10 @@ public:
 
 private:
     bool open;
-    std::vector<Trainer*> trainers;
-    std::vector<Workout> workout_options;
-    std::vector<BaseAction*> actionsLog;
     int sequentialCustomerId;
+    std::vector<Workout> workout_options;
+    std::vector<Trainer*> trainers;
+    std::vector<BaseAction*> actionsLog;
 
     int readNumOfTrainers(const std::string& line);
     void createCustomers(std::vector<string> & args, std::vector<Customer*> & customerList);

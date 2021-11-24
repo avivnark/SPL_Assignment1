@@ -1,17 +1,17 @@
 #include "../include/Studio.h"
 #include "../include/Trainer.h"
 
-Trainer::Trainer(int t_capacity) : capacity(t_capacity), salary(0), open(false){
+Trainer::Trainer(int t_capacity) : capacity(t_capacity), open(false), salary(0){
 }
 // #TODO reduce duplicate code in rule of five, use functions to clear
-Trainer::Trainer(const Trainer &other) : capacity(other.capacity), salary(other.salary), open(other.open), orderList(other.orderList) {
+Trainer::Trainer(const Trainer &other) : capacity(other.capacity), open(other.open), salary(other.salary), orderList(other.orderList) {
     customersList.reserve(other.customersList.size());
     for (auto *customer: other.customersList) {
         customersList.push_back(customer->clone());
     }
 }
 
-Trainer::Trainer(Trainer &&other) : capacity(other.capacity), salary(other.salary), open(other.open) { // move constructor
+Trainer::Trainer(Trainer &&other) : capacity(other.capacity), open(other.open), salary(other.salary) { // move constructor
     for (auto *customer: customersList) {
         delete customer;
     }

@@ -69,7 +69,7 @@ void OpenTrainer::act(Studio &studio) {
         this->error("Trainer is already opened");
         return;
     }
-    if (customers.size() > t->getCapacity()) {
+    if ((int) customers.size() > t->getCapacity()) {
         error("Not enough spots open for this trainer");
         return;
     }
@@ -152,7 +152,7 @@ void MoveCustomer::act(Studio &studio) {
         error("Cannot move customer");
         return;
     }
-    if (dst->getCustomers().size() + 1 > dst->getCapacity()) {
+    if ((int) dst->getCustomers().size() + 1 > dst->getCapacity()) {
         error("Cannot move customer");
         return;
     }

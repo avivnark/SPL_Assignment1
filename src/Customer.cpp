@@ -27,7 +27,7 @@ SweatyCustomer::SweatyCustomer(string name, int id) : Customer(name, id) {
 
 
 std::vector<int> SweatyCustomer::order(const std::vector<Workout> &workout_options) {
-    unsigned long numOfWorkouts = workout_options.size();
+    int numOfWorkouts = (int) workout_options.size();
     vector<int> workoutsOrdered;
     for (int i = 0; i < numOfWorkouts; i++)
         if (workout_options.at(i).getType() == CARDIO)
@@ -52,7 +52,7 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout> &workout_option
     vector<int> workoutsOrdered;
     int cheapestWorkoutId;
     int minPrice = workout_options.at(0).getPrice();
-    for (int i = 1; i < workout_options.size(); i++) {
+    for (int i = 1; i <(int) workout_options.size(); i++) {
         if (workout_options.at(i).getPrice() < minPrice) {
             cheapestWorkoutId = workout_options.at(i).getId();
             minPrice = workout_options.at(i).getPrice();

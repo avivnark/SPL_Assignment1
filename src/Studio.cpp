@@ -29,8 +29,9 @@ Studio::~Studio() { // Destructor
 }
 
 
-Studio::Studio(Studio &&other) { // move constructor
+Studio::Studio(Studio &&other): open(other.open), sequentialCustomerId(other.sequentialCustomerId) { // move constructor
     clearStudioResources();
+    workout_options.clear();
 
     //move resources from other
     for (auto * trainer: other.trainers) {
@@ -38,6 +39,9 @@ Studio::Studio(Studio &&other) { // move constructor
     }
     for (auto * baseAction: other.actionsLog) {
         actionsLog.push_back(baseAction);
+    }
+    for (const auto& workout: other.workout_options) {
+        workout_options.emplace_back(Workout(workout));
     }
 
     //delete other pointers
@@ -91,7 +95,7 @@ Studio::Studio(const string &configFilePath) {
     do{
         getline(MyReadFile, line);
     } while (line[0] == '\0' || line[0] == '#');
-    int numOfTrainers = readNumOfTrainers(line);
+    unsigned int numOfTrainers = readNumOfTrainers(line);
     trainers.reserve(numOfTrainers);
     do{
         getline(MyReadFile, line);
@@ -186,7 +190,7 @@ int Studio::getNumOfTrainers() const {
 }
 
 Trainer *Studio::getTrainer(int tid) {
-    if (trainers.size() < tid) {
+    if ((int) trainers.size() < tid) {
         return nullptr;
     }
     return trainers[tid];
@@ -206,7 +210,7 @@ int Studio::readNumOfTrainers(const string &line) {
 
 void Studio::createNewTrainers(string line) {
     //example input: "6,6,8,4"
-    for (int i = 0; i < line.length(); i += 2) {
+    for (int i = 0; i <(int) line.length(); i += 2) {
         int capacity = line[i] - '0';
         trainers.push_back(new Trainer(capacity));
     }
@@ -244,11 +248,9 @@ std::string Studio::convertEnumToString(WorkoutType enum_workout) {
 }
 
 bool Studio::extractCommand(const string &user_input, string &command, vector<string> &args) {
-    unsigned int length = user_input.size();
     unsigned long start_sep = 0;
     unsigned long end_sep = user_input.find(' ');
     command = user_input.substr(start_sep, end_sep);
-    int index = 0;
     start_sep = end_sep + 1;
     end_sep = user_input.find(' ', start_sep);
     while (start_sep != 0) {
