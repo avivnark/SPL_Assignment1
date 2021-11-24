@@ -43,7 +43,7 @@ BaseAction &BaseAction::operator=(BaseAction &&other) {
     return *this;
 }
 
-OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(customersList) {
+OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(std::move(customersList)) {
 }
 
 OpenTrainer::~OpenTrainer() {

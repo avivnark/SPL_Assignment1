@@ -63,7 +63,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
         for (auto *baseAction: other.actionsLog) {
             actionsLog.push_back(baseAction->clone());
         }
-        for (auto workout: other.workout_options) {
+        for (const auto& workout: other.workout_options) {
             workout_options.emplace_back(Workout(workout));
         }
     }
@@ -72,6 +72,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
 
 Studio &Studio::operator=(Studio &&other) { // move assignment operator
     if (this != &other){
+        clearStudioResources();
         trainers = std::move(other.trainers);
         actionsLog = std::move(other.actionsLog);
         for (auto workout: other.workout_options) {
