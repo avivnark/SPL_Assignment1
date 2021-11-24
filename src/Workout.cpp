@@ -10,10 +10,6 @@ Workout::Workout(int w_id, string w_name, int w_price, WorkoutType w_type) : id(
 
 }
 
-//Workout &Workout::operator=(const Workout &other) { // copy assignment operator
-//    return *this;
-//}
-
 int Workout::getId() const {
     return id;
 }

@@ -11,7 +11,8 @@ Studio::Studio() {
     sequentialCustomerId = 0;
 }
 
-Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(other.sequentialCustomerId), workout_options(other.workout_options) { // Copy constructor
+Studio::Studio(const Studio &other) : open(other.open), sequentialCustomerId(other.sequentialCustomerId),
+                                      workout_options(other.workout_options) { // Copy constructor
     trainers.reserve(other.trainers.size());
     actionsLog.reserve(other.actionsLog.size());
 
@@ -29,18 +30,19 @@ Studio::~Studio() { // Destructor
 }
 
 
-Studio::Studio(Studio &&other): open(other.open), sequentialCustomerId(other.sequentialCustomerId) { // move constructor
+Studio::Studio(Studio &&other) : open(other.open),
+                                 sequentialCustomerId(other.sequentialCustomerId) { // move constructor
     clearStudioResources();
     workout_options.clear();
 
     //move resources from other
-    for (auto * trainer: other.trainers) {
+    for (auto *trainer: other.trainers) {
         trainers.push_back(trainer);
     }
-    for (auto * baseAction: other.actionsLog) {
+    for (auto *baseAction: other.actionsLog) {
         actionsLog.push_back(baseAction);
     }
-    for (const auto& workout: other.workout_options) {
+    for (const auto &workout: other.workout_options) {
         workout_options.emplace_back(Workout(workout));
     }
 
@@ -67,7 +69,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
         for (auto *baseAction: other.actionsLog) {
             actionsLog.push_back(baseAction->clone());
         }
-        for (const auto& workout: other.workout_options) {
+        for (const auto &workout: other.workout_options) {
             workout_options.emplace_back(Workout(workout));
         }
     }
@@ -75,7 +77,7 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
 }
 
 Studio &Studio::operator=(Studio &&other) { // move assignment operator
-    if (this != &other){
+    if (this != &other) {
         clearStudioResources();
         workout_options.clear();
         trainers = std::move(other.trainers);
@@ -92,12 +94,12 @@ Studio::Studio(const string &configFilePath) {
     sequentialCustomerId = 0;
     string line;
     ifstream MyReadFile(configFilePath);
-    do{
+    do {
         getline(MyReadFile, line);
     } while (line[0] == '\0' || line[0] == '#');
     unsigned int numOfTrainers = readNumOfTrainers(line);
     trainers.reserve(numOfTrainers);
-    do{
+    do {
         getline(MyReadFile, line);
     } while (line[0] == '\0' || line[0] == '#');
     createNewTrainers(line);
@@ -210,7 +212,7 @@ int Studio::readNumOfTrainers(const string &line) {
 
 void Studio::createNewTrainers(string line) {
     //example input: "6,6,8,4"
-    for (int i = 0; i <(int) line.length(); i += 2) {
+    for (int i = 0; i < (int) line.length(); i += 2) {
         int capacity = line[i] - '0';
         trainers.push_back(new Trainer(capacity));
     }

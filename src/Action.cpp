@@ -22,13 +22,6 @@ void BaseAction::error(std::string errorMsg) {
     std::cout << this->errorMsg << std::endl;
 }
 
-//void BaseAction::logger(string & command, vector<string>& *arguments){
-//    string log = command;
-//    for (int i = 0; i < (*arguments).size();i++) {
-//        log += " " + (*arguments)[i];
-//    }
-//}
-
 std::string BaseAction::getErrorMsg() const {
     return errorMsg;
 }
@@ -43,7 +36,8 @@ BaseAction &BaseAction::operator=(BaseAction &&other) {
     return *this;
 }
 
-OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(std::move(customersList)) {
+OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id),
+                                                                           customers(std::move(customersList)) {
 }
 
 OpenTrainer::~OpenTrainer() {
@@ -148,7 +142,7 @@ void MoveCustomer::act(Studio &studio) {
         error("Cannot move customer");
         return;
     }
-    if (src->getCustomer(id) == nullptr){
+    if (src->getCustomer(id) == nullptr) {
         error("Cannot move customer");
         return;
     }
@@ -163,12 +157,13 @@ void MoveCustomer::act(Studio &studio) {
     // move customer from source trainer to destination trainer
     dst->addCustomer(src->getCustomer(id)->clone());
     for (auto orderPair: src->getOrders()) {
-        if (orderPair.first == id){
+        if (orderPair.first == id) {
             dst->addOrder(orderPair);
         }
     }
     src->removeCustomer(id);
-    if (src->getNumberOfCustomers() == 0) { // move trainer deletes customers, when restoring, under copy assignment operator, i
+    if (src->getNumberOfCustomers() ==
+        0) { // move trainer deletes customers, when restoring, under copy assignment operator, i
         auto *closeTrainer = new Close(srcTrainer);
         closeTrainer->act(studio);
         delete closeTrainer;
@@ -225,6 +220,7 @@ BaseAction *Close::clone() {
 CloseAll::CloseAll() {
 
 }
+
 void CloseAll::act(Studio &studio) {
     for (int i = 0; i < studio.getNumOfTrainers(); ++i) {
         Trainer *trainer = studio.getTrainer(i);
