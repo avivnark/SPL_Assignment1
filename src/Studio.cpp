@@ -130,7 +130,7 @@ void Studio::start() {
         } else if (command == "open") {
             int trainerId = stoi(args[0]);
             std::vector<Customer *> customerList;
-            vector<string> customersRawInput = {args.begin() + 1, args.end()};
+            vector<string> customersRawInput({args.begin() + 1, args.end()});
             createCustomers(customersRawInput, customerList);
             auto *openTrainer = new OpenTrainer(trainerId, customerList);
             openTrainer->act(*this);

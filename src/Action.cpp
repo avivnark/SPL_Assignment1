@@ -332,6 +332,7 @@ BackupStudio::BackupStudio() : BaseAction() {
 
 void BackupStudio::act(Studio &studio) {
     backup = new Studio(studio);
+    complete();
 }
 
 std::string BackupStudio::toString() const {
