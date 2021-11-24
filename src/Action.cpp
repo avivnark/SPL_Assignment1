@@ -225,7 +225,6 @@ BaseAction *Close::clone() {
 CloseAll::CloseAll() {
 
 }
-
 void CloseAll::act(Studio &studio) {
     for (int i = 0; i < studio.getNumOfTrainers(); ++i) {
         Trainer *trainer = studio.getTrainer(i);
