@@ -171,6 +171,7 @@ void MoveCustomer::act(Studio &studio) {
     if (src->getNumberOfCustomers() == 0) { // move trainer deletes customers, when restoring, under copy assignment operator, i
         auto *closeTrainer = new Close(srcTrainer);
         closeTrainer->act(studio);
+        delete closeTrainer;
     }
     complete();
 }
