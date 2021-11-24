@@ -37,15 +37,26 @@ BaseAction::BaseAction(const BaseAction &other) {
 
 }
 
-BaseAction::~BaseAction() {
-
-}
+BaseAction::~BaseAction() = default;
 
 BaseAction &BaseAction::operator=(BaseAction &&other) {
     return *this;
 }
 
 OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList) : trainerId(id), customers(customersList) {
+}
+
+OpenTrainer::~OpenTrainer() {
+    for (auto *customer: customers) {
+        delete customer;
+    }
+    customers.clear();
+}
+
+
+BaseAction &OpenTrainer::operator=(BaseAction &&other) {
+    customers = std::move(dynamic_cast<OpenTrainer &&>(other).customers);
+    return *this;
 }
 
 void OpenTrainer::act(Studio &studio) {
@@ -64,7 +75,7 @@ void OpenTrainer::act(Studio &studio) {
     }
     t->openTrainer();
     for (auto *customer: customers) {
-        t->addCustomer(customer);
+        t->addCustomer(customer->clone());
     }
     complete();
 }
@@ -91,19 +102,6 @@ OpenTrainer::OpenTrainer(const OpenTrainer &other) : trainerId(other.trainerId) 
     for (auto *otherCustomer: other.customers) {
         customers.push_back(otherCustomer->clone());
     }
-}
-
-OpenTrainer::~OpenTrainer() {
-//    for (auto *customer: customers) {
-//        delete customer;
-//    }
-    customers.clear();
-}
-
-
-BaseAction &OpenTrainer::operator=(BaseAction &&other) {
-    customers = std::move(dynamic_cast<OpenTrainer &&>(other).customers);
-    return *this;
 }
 
 Order::Order(int id) : BaseAction(), trainerId(id) {
