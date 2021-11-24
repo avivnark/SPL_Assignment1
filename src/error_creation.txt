@@ -1,36 +1,21 @@
-/Users/ronlevi/CLionProjects/SPL_Assignment1/cmake-build-debug/SPL_Assignment1 /Users/ronlevi/CLionProjects/SPL_Assignment1/src/ExampleInput.txt
-Studio is now Open!
-open 2 ron,mcl aviv,fbd
-open 3 Shuli,chp
+//Studio is now Open!
+open 2 ron,mcl
 order 2
-- ron Is Doing Pilates
-- ron Is Doing Yoga
-- aviv Is Doing Rope Jumps
-- aviv Is Doing CrossFit
-- aviv Is Doing Yoga
-order 3
-- Shuli Is Doing Rope Jumps
+//ron Is Doing Pilates
+//ron Is Doing Yoga
+log
+//open 2 ron,mcl Completed
+//order 2 Completed
 backup
-move 2 3 1
+open 1 aviv,fbd
+order 1
+//aviv Is Doing Rope Jumps
+//aviv Is Doing CrossFit
+//aviv Is Doing Yoga
+move 2 1 0
+//Trainer 2 closed. Salary 0NIS
 restore
-status 2
-- Trainer 2 status: open
-- Customers:
-- 0 ron
-- 1
-- Orders:
-- Pilates 110NIS 0
-- Yoga 90NIS 0
-- Rope Jumps 70NIS 1
-- CrossFit 140NIS 1
-- Yoga 90NIS 1
-- Current Trainer's Salary: 500NIS
-status 3
-- Trainer 3 status: open
-- Customers:
-- 2 Shuli
-- Orders:
-- Rope Jumps 70NIS 2
-- Current Trainer's Salary: 70NIS
-closeall
-Exception: EXC_BAD_ACCESS (code=1, address=0x4)
+//Exception: EXC_BAD_ACCESS (code=EXC_I386_GPFLT)
+//Exception: EXC_BAD_ACCESS (code=EXC_I386_GPFLT)
+
+Process finished with exit code 9

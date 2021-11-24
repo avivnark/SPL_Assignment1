@@ -172,8 +172,8 @@ void Studio::start() {
             backupStudio->act(*this);
         } else if (command == "restore") {
             auto *restoreStudio = new RestoreStudio();
-            actionsLog.push_back(restoreStudio);
             restoreStudio->act(*this);
+            actionsLog.push_back(restoreStudio);
         } else {
             cout << "Unidentified command, please try again:" << endl;
         }

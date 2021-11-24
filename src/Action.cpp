@@ -168,8 +168,7 @@ void MoveCustomer::act(Studio &studio) {
         }
     }
     src->removeCustomer(id);
-
-    if (src->getNumberOfCustomers() == 0) {
+    if (src->getNumberOfCustomers() == 0) { // move trainer deletes customers, when restoring, under copy assignment operator, i
         auto *closeTrainer = new Close(srcTrainer);
         closeTrainer->act(studio);
     }
@@ -352,8 +351,8 @@ void RestoreStudio::act(Studio &studio) {
         error("No backup available");
         return;
     }
-    studio = Studio(*backup);
-    complete();
+    studio = *backup; //copy assignment called
+    complete(); // #TODO check
 }
 
 std::string RestoreStudio::toString() const {
