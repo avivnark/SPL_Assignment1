@@ -66,7 +66,7 @@ int Trainer::getCapacity() const {
 }
 
 void Trainer::addCustomer(Customer *customer) {
-    customersList.push_back(customer->clone());
+    customersList.push_back(customer);
 }
 
 void Trainer::removeCustomer(int id) {
@@ -111,11 +111,11 @@ void Trainer::openTrainer() {
 }
 
 void Trainer::closeTrainer() {
-    for (auto *customer: customersList) {
-        delete customer;
-    }
-    customersList.clear();
-    orderList.clear();
+//    for (auto *customer: customersList) {
+//        delete customer;
+//    }
+//    customersList.clear();
+//    orderList.clear();
     salary += getSalary();
     open = false;
 }
