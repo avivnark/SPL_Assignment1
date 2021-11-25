@@ -62,7 +62,6 @@ Studio &Studio::operator=(const Studio &other) { // copy assignment operator
         workout_options.clear();
 
         //copy new studio into this
-//        workout_options.assign(other.workout_options.begin(), other.workout_options.end());
         for (auto *trainer: other.trainers) {
             trainers.push_back(new Trainer(*trainer));
         }
@@ -192,7 +191,7 @@ int Studio::getNumOfTrainers() const {
 }
 
 Trainer *Studio::getTrainer(int tid) {
-    if ((int) trainers.size() < tid) {
+    if (tid >= (int) trainers.size() || tid < 0) {
         return nullptr;
     }
     return trainers[tid];
