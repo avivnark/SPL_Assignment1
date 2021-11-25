@@ -1,9 +1,10 @@
 CXX = g++
 CXXFLAGS = -g -Wall -std=c++11
-CPPFLAGS = -I ./include -D -MP
+CPPFLAGS = -I ./include -MMD -MP
 
 SRCS = $(wildcard ./src/*.cpp)
 OBJS = $(patsubst ./src/%.cpp,./bin/%.o, $(SRCS))
+DEPS := $(patsubst %.o, %.d, $(OBJS))
 
 # default target
 all: ./bin/studio
@@ -22,3 +23,5 @@ all: ./bin/studio
 clean:
 	@echo 'cleaning...'
 	@rm -f ./bin/*
+
+-include $(DEPS)
