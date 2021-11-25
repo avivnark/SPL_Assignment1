@@ -4,7 +4,6 @@ CPPFLAGS = -I ./include -MMD -MP
 
 SRCS = $(wildcard ./src/*.cpp)
 OBJS = $(patsubst ./src/%.cpp,./bin/%.o, $(SRCS))
-#DEPS := $(patsubst %.o, $(OBJS))
 
 # default target
 all: ./bin/studio
@@ -23,5 +22,3 @@ all: ./bin/studio
 clean:
 	@echo 'cleaning...'
 	@rm -f ./bin/*
-
-#-include $(DEPS)
